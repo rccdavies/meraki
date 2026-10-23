@@ -1,6 +1,8 @@
 import { stripe } from "./_access.js";
 import { isSku } from "./_catalog.js";
 
+const HUMAN_SERVICES = new Set(["live_panel"]);
+
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   if (!process.env.STRIPE_SECRET_KEY) return res.status(503).json({ error: "Payments aren't switched on yet." });
@@ -19,9 +21,13 @@ export default async function handler(req, res) {
       success_url: `${origin}/?paid={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/#plans`,
     };
-    // Managed Payments: Stripe handles worldwide tax, fraud and disputes. Set MANAGED_PAYMENTS=1 once eligible.
-    if (process.env.MANAGED_PAYMENTS === "1") params.managed_payments = { enabled: true };
-    else params.automatic_tax = { enabled: process.env.STRIPE_TAX === "1" };
+    // Managed Payments is on by default for this Stripe account: Stripe handles worldwide tax,
+    // fraud and disputes, so automatic_tax must not be sent. Live coaching involves people, so it
+    // isn't eligible: that product goes through ordinary Checkout instead.
+    if (HUMAN_SERVICES.has(sku)) {
+      params.managed_payments = { enabled: false };
+      if (process.env.STRIPE_TAX === "1") params.automatic_tax = { enabled: true };
+    }
     const session = await s.checkout.sessions.create(params);
     return res.json({ url: session.url });
   } catch (e) {
