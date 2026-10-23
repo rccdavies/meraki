@@ -1033,13 +1033,17 @@ document.addEventListener("click",async e=>{const b=e.target.closest("[data-buy]
     $("#checkout-note").textContent=d.error||"Checkout couldn't start. Please try again.";toast(d.error||"Checkout couldn't start")}
   catch(err){toast("You seem to be offline.")}
   b.disabled=false;b.textContent=t});
-$("#acc-add").onclick=()=>{const v=$("#acc-code").value.trim().split(/\s+/).filter(x=>/^cs_(test|live)_/.test(x));
+const isCode=x=>/^cs_(test|live)_/.test(x)||/^MERAKI-[A-Z0-9]{4,}$/i.test(x);
+$("#acc-add").onclick=()=>{const v=$("#acc-code").value.trim().split(/\s+/).filter(isCode).map(x=>/^cs_/.test(x)?x:x.toUpperCase());
   if(!v.length){toast("That doesn't look like an access code.");return}
-  store.set("tokens",[...new Set([...tokens(),...v])]);$("#acc-code").value="";refreshAccess().then(()=>toast(ENT.passUntil||ENT.advanced?"Access restored":"No active purchase found for that code"))};
+  store.set("tokens",[...new Set([...tokens(),...v])]);$("#acc-code").value="";refreshAccess().then(()=>toast(ENT.passUntil||ENT.advanced?"Access added":"That code isn't active"))};
 (function(){const q=new URLSearchParams(location.search),paid=q.get("paid");
   if(paid&&/^cs_(test|live)_/.test(paid)){store.set("tokens",[...new Set([...tokens(),paid])]);
     history.replaceState(null,"",location.pathname+"#plans");
     refreshAccess().then(()=>{go("plans");toast("Payment received. You're all set.")});}
+  else if(q.get("code")&&isCode(q.get("code"))){const c=q.get("code").toUpperCase();store.set("tokens",[...new Set([...tokens(),c])]);
+    history.replaceState(null,"",location.pathname);
+    refreshAccess().then(()=>toast(ENT.passUntil?"Trial active until "+new Date(ENT.passUntil).toLocaleString("en-GB",{weekday:"short",hour:"2-digit",minute:"2-digit"}):"That trial code has expired"))}
   else refreshAccess()})();
 
 /* ---------- photos: slot -> url, filled once photos are supplied ---------- */
