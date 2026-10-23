@@ -25,6 +25,7 @@ export default async function handler(req, res) {
     const session = await s.checkout.sessions.create(params);
     return res.json({ url: session.url });
   } catch (e) {
+    console.error("checkout_error", e?.type, e?.code, e?.message);
     return res.status(500).json({ error: "Checkout couldn't start. Please try again." });
   }
 }

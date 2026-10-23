@@ -7,6 +7,7 @@ export default async function handler(req, res) {
     return res.json({ passUntil: ent.passUntil, advanced: ent.advanced,
       purchases: ent.purchases.map(({ id, sku, name, left }) => ({ id, sku, name, left })) });
   } catch (e) {
+    console.error("access_error", e?.type, e?.code, e?.message);
     return res.status(500).json({ error: "Couldn't check your access just now." });
   }
 }
