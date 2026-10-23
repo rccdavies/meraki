@@ -564,7 +564,10 @@ $("#rules").innerHTML=RULES.map((r,i)=>`<div class="tip"><span class="n">${i+1}<
 const SHARE_URL=location.origin;
 const INVITE=`I've been using Meraki to prepare for school leadership roles. It scores live vacancies against what you want, reads your letter like a search partner and runs mock panels on camera. Worth a look: ${SHARE_URL}`;
 $("#invite-text").textContent=INVITE;
-$("#sh-wa").href="https://wa.me/?text="+encodeURIComponent(INVITE);
+const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+$("#sh-wa").href=(mobile?"https://wa.me/?text=":"https://web.whatsapp.com/send?text=")+encodeURIComponent(INVITE);
+if(navigator.share&&mobile){const b=document.createElement("button");b.className="btn share-out";b.textContent="More…";
+  b.onclick=()=>navigator.share({title:"Meraki",text:INVITE}).catch(()=>{});$("#sh-li").after(b)}
 $("#sh-li").href="https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(SHARE_URL);
 $("#sh-copy").onclick=()=>{navigator.clipboard?.writeText(INVITE).then(()=>toast("Invite copied. Paste it anywhere.")).catch(()=>{const r=document.createRange();r.selectNodeContents($("#invite-text"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);toast("Invite selected. Copy it to share.")})};
 
