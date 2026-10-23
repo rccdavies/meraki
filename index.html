@@ -1,0 +1,1052 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Meraki · Lead with soul</title>
+<meta name="description" content="Candidate-side search, application and interview practice for international school leaders.">
+<meta name="theme-color" content="#232A44">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+/* Layout: mobile-first app shell (top bar, scrolling cards, bottom tab bar); at 900px+ a sidebar app with multi-column views.
+   Palette modelled on the navy-and-orchid card: deep navy, orchid pink, white; navy carries action, pink marks emphasis (underlines, highlights, scores) */
+:root{
+  --bg:#F6F6F9; --surface:#FFFFFF; --sunk:#EEEFF4; --ink:#232A44; --muted:#5D6380; --line:#E1E3EB;
+  --navy:#232A44; --pink:#E09EC0; --pink-ink:#A24C7A;
+  --teal:#232A44; --teal-ink:#232A44; --teal-soft:#F8E8F0; --on-teal:#FFFFFF;
+  --blue:#E09EC0; --blue-ink:#232A44; --blue-soft:#EEEFF4;
+  --indigo:#232A44; --indigo-ink:#3A4366; --indigo-soft:#EEEFF4; --on-indigo:#FFFFFF; --kit:#232A44; --hero:#232A44;
+  --d1:#232A44; --d2:#E09EC0; --d3:#7A82A3; --d4:#F2CFE0;
+  --warn:#B87613; --bad:#C23B4B;
+  --display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --serif:"DM Serif Display", "Playfair Display", Georgia, serif;
+  --body:"Newsreader", Georgia, "Times New Roman", serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --r:20px; --r-sm:14px;
+  --gl:max(16px,env(safe-area-inset-left,0px)); --gr:max(16px,env(safe-area-inset-right,0px));
+  --tab:70px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#151A2C; --surface:#1F2540; --sunk:#191E33; --ink:#F2F2F7; --muted:#A7ADC4; --line:#2E3554;
+  --navy:#232A44; --pink:#E09EC0; --pink-ink:#EBB6D2;
+  --teal:#E09EC0; --teal-ink:#EBB6D2; --teal-soft:#3A2A40; --on-teal:#232A44;
+  --blue:#E09EC0; --blue-ink:#F2F2F7; --blue-soft:#262D4A;
+  --indigo:#E9EAF2; --indigo-ink:#C9CCDD; --indigo-soft:#262D4A; --on-indigo:#232A44; --kit:#232A44; --hero:#232A44;
+  --d1:#F2F2F7; --d2:#E09EC0; --d3:#7A82A3; --d4:#F2CFE0;
+  --warn:#EDB45C; --bad:#F0808D; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151A2C; --surface:#1F2540; --sunk:#191E33; --ink:#F2F2F7; --muted:#A7ADC4; --line:#2E3554;
+  --navy:#232A44; --pink:#E09EC0; --pink-ink:#EBB6D2;
+  --teal:#E09EC0; --teal-ink:#EBB6D2; --teal-soft:#3A2A40; --on-teal:#232A44;
+  --blue:#E09EC0; --blue-ink:#F2F2F7; --blue-soft:#262D4A;
+  --indigo:#E9EAF2; --indigo-ink:#C9CCDD; --indigo-soft:#262D4A; --on-indigo:#232A44; --kit:#232A44; --hero:#232A44;
+  --d1:#F2F2F7; --d2:#E09EC0; --d3:#7A82A3; --d4:#F2CFE0;
+  --warn:#EDB45C; --bad:#F0808D; color-scheme:dark}
+.s-strong{background:var(--blue)!important}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--display);font-size:16.5px;line-height:1.5;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:40;background:var(--bg)}
+h1,h2,h3,h4{margin:0;text-wrap:balance;letter-spacing:-.02em}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.serif{font-family:var(--body)}
+.hint{font-family:var(--body);font-size:15.5px;color:var(--muted)}
+.sample-flag{font-family:var(--mono);font-size:10.5px;color:var(--muted);background:var(--sunk);border-radius:999px;padding:3px 9px;width:max-content;max-width:100%}
+
+/* shell */
+.shell{min-height:100%}
+.side{display:none}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-block:10px;padding-left:var(--gl);padding-right:var(--gr);background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px)}
+.brand{display:flex;align-items:center;gap:9px;font-weight:800;font-size:23px;letter-spacing:-.04em}
+.mark{display:inline-grid;grid-template-columns:repeat(2,8px);gap:3px;flex:none}.mark i{width:8px;height:8px;border-radius:50%;display:block}
+.top-r{display:flex;align-items:center;gap:8px}
+.credit{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:5px 10px 5px 6px;font-size:12px;font-weight:600}
+.credit i{width:18px;height:18px;border-radius:50%;background:var(--teal-soft);display:grid;place-items:center;color:var(--teal-ink);font-style:normal;font-size:11px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--indigo-soft);color:var(--indigo-ink);display:grid;place-items:center;border:0}
+.avatar svg{width:18px;height:18px}
+main{padding-left:var(--gl);padding-right:var(--gr);padding-block:6px calc(var(--tab) + 28px + env(safe-area-inset-bottom,0px));max-width:1080px;margin:0 auto}
+section[data-view]{display:grid;gap:18px}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:35;display:grid;grid-template-columns:repeat(5,1fr);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));
+  background:color-mix(in srgb,var(--surface) 92%,transparent);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+.tabbar button{background:none;border:0;display:grid;justify-items:center;gap:3px;padding:4px 0;color:var(--muted);font-size:12px;font-weight:600}
+.tabbar .ic{display:grid;place-items:center;width:52px;height:30px;border-radius:999px;transition:background .2s}
+.tabbar svg,.side svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tabbar button[aria-current="page"]{color:var(--teal-ink)}
+.tabbar button[aria-current="page"] .ic{background:var(--teal-soft)}
+
+/* typography */
+.vh{display:flex;justify-content:space-between;align-items:end;gap:12px;padding-top:6px}
+.vh>div{min-width:0}
+.vh .eyebrow{color:var(--pink-ink);font-weight:600}
+.page-h{font-size:clamp(30px,8vw,44px);line-height:1;font-weight:800;letter-spacing:-.035em;margin-top:4px}
+.lede{font-family:var(--body);font-size:19px;color:var(--muted);max-width:56ch}
+.sh{font-size:21px;font-weight:700;display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.sh small{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted);letter-spacing:.04em}
+
+/* primitives */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0}
+.btn{border:0;border-radius:999px;padding:14px 22px;font-weight:600;font-size:16.5px;background:var(--indigo);color:var(--on-indigo);display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px}
+.btn.teal{background:var(--teal);color:var(--on-teal)}
+.btn.ghost{background:var(--sunk);color:var(--ink)}
+.btn.glass{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28)}
+.btn.sm{padding:9px 15px;min-height:40px;font-size:14.5px}
+.btn.block{width:100%}
+.btn:disabled{opacity:.55;cursor:wait}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.seg{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;background:var(--sunk);border-radius:999px;padding:4px;gap:4px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:10px;font-weight:600;font-size:14.5px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(20,16,60,.12)}
+.seg button.adv[aria-pressed="true"]{background:var(--indigo);color:var(--on-indigo)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:9px 14px;font-size:14.5px;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--teal-soft);border-color:var(--teal);color:var(--teal-ink);font-weight:600}
+.field{display:grid;gap:7px}
+.field>label,.field>.lab{font-size:15px;font-weight:600}
+select,input[type=text],textarea{width:100%;background:var(--sunk);border:1px solid transparent;border-radius:var(--r-sm);padding:12px 13px;font-size:16px}
+select:focus,input:focus,textarea:focus{border-color:var(--teal);outline:none;background:var(--surface)}
+textarea{font-family:var(--body);line-height:1.45;resize:vertical}
+.rail{display:grid;grid-auto-flow:column;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
+  margin-left:calc(-1*var(--gl));margin-right:calc(-1*var(--gr));padding:2px var(--gr) 4px var(--gl);scroll-padding-inline:var(--gl)}
+.rail::-webkit-scrollbar{display:none}
+.rail>*{scroll-snap-align:start}
+.chiprow{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-left:calc(-1*var(--gl));margin-right:calc(-1*var(--gr));padding:0 var(--gr) 0 var(--gl)}
+.chiprow::-webkit-scrollbar{display:none}
+.chiprow .chip{white-space:nowrap;flex:none}
+
+/* photos */
+.photo{margin:0;position:relative;aspect-ratio:16/10;max-width:100%;overflow:hidden;border-radius:var(--r-sm);
+  background:radial-gradient(90% 80% at 85% 10%,color-mix(in srgb,var(--teal) 55%,transparent),transparent 60%),linear-gradient(140deg,var(--indigo-soft),color-mix(in srgb,var(--indigo) 30%,var(--indigo-soft)))}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--fp,50% 40%)}
+.photo figcaption{position:absolute;left:10px;bottom:9px;right:10px;font-family:var(--mono);font-size:10.5px;color:var(--ink);opacity:.72}
+.photo.has figcaption{display:none}
+
+/* home */
+.hero{background:var(--hero);color:#fff;border-radius:26px;padding:24px 22px;display:grid;gap:14px}
+.hero .eyebrow{color:var(--pink);font-family:var(--display);font-size:14px;letter-spacing:.02em;text-transform:none;font-weight:600}
+.hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(52px,15vw,100px);line-height:.95;letter-spacing:-.02em}
+.hero h1 em{font-style:normal;color:#fff;text-decoration:underline;text-decoration-color:var(--pink);text-decoration-thickness:.07em;text-underline-offset:.12em}
+.hero p{font-family:var(--body);font-size:20px;line-height:1.4;max-width:34ch;color:rgba(255,255,255,.9)}
+.hero p b{font-weight:500;color:#fff;box-shadow:inset 0 -.32em 0 rgba(224,158,192,.55)}
+.hero .btn.teal{background:var(--pink);color:#232A44}
+.hero .btn.ghost{background:rgba(255,255,255,.12);color:#fff}
+.hero .photo{border-radius:16px}
+.match{grid-template-columns:auto 1fr auto;align-items:center}
+.match b{font-size:18px}
+.match .serif{font-size:16.5px;color:var(--muted)}
+.tool{width:min(78vw,320px);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:grid;text-align:left;padding:0;color:inherit}
+.tool .photo{border-radius:0}
+.tool>div{padding:14px 16px 16px;display:grid;gap:6px}
+.tool h3{font-size:22px}
+.tool p{font-family:var(--body);font-size:17px;color:var(--muted)}
+.tool .go{font-size:15px;font-weight:600;color:var(--teal-ink)}
+.tip{width:min(70vw,260px);border-radius:var(--r);padding:16px;display:grid;gap:8px;align-content:start;background:var(--surface);border:1px solid var(--line)}
+.tip:nth-child(odd){background:var(--hero);border-color:transparent;color:#fff}
+.tip:nth-child(odd) span{color:rgba(255,255,255,.8)!important}
+.tip:nth-child(odd) .n{color:var(--pink)!important}
+.tip:nth-child(even){background:var(--blue-soft);border-color:transparent}
+.tip:nth-child(even) .n{color:var(--pink-ink)}
+
+.tip .n{font-family:var(--serif);font-weight:400;font-size:42px;font-weight:800;line-height:1;color:var(--teal-ink)}
+.tip b{font-size:19px;line-height:1.2}
+.tip span{font-family:var(--body);font-size:16.5px;color:var(--muted)}
+.flip{grid-template-columns:1fr 1fr;gap:0;padding:0;overflow:hidden}
+.flip>div{padding:16px;display:grid;gap:6px;align-content:start}
+.flip>div+div{background:var(--teal-soft)}
+.flip p{font-family:var(--body);font-size:17.5px}
+.flip .old p{color:var(--muted)}
+.flip .new .eyebrow{color:var(--teal-ink)}
+.share{background:var(--kit);color:#fff;border:0}
+.share .eyebrow{color:rgba(255,255,255,.7)}
+.share h2{font-size:clamp(32px,9vw,52px);line-height:.95;letter-spacing:-.04em}
+.share h2{font-family:var(--serif);font-weight:400;letter-spacing:-.01em}
+.share h2 span{color:#fff;text-decoration:underline;text-decoration-color:var(--pink);text-decoration-thickness:.07em;text-underline-offset:.12em}
+.share .eyebrow{color:var(--pink)!important}
+.share-p{font-family:var(--body);font-size:18px;color:rgba(255,255,255,.88);max-width:44ch}
+.invite{font-family:var(--body);font-size:16px;line-height:1.45;background:rgba(255,255,255,.08);border-left:3px solid var(--pink);border-radius:10px;padding:12px 14px;color:#fff;user-select:all}
+.share-row{display:flex;gap:10px;flex-wrap:wrap}
+.share .btn.teal{background:var(--pink);color:#232A44}
+.share-out{background:rgba(255,255,255,.12);color:#fff;text-decoration:none}
+.share-tag{font-family:var(--mono);font-size:12px;color:var(--pink)}
+.about{display:grid;gap:12px;padding:20px;border-radius:var(--r);background:var(--surface);border:1px solid var(--line)}
+.about .eyebrow{color:var(--pink-ink);font-weight:600}
+.about h2{font-family:var(--serif);font-weight:400;font-size:clamp(26px,6.5vw,36px);line-height:1.1;letter-spacing:-.01em;max-width:24ch}
+.about-grid{display:grid;gap:14px}
+.about-grid>div{display:grid;gap:4px;padding-top:12px;border-top:2px solid var(--pink)}
+.about-grid b{font-size:17px}
+.about-grid p{font-family:var(--body);font-size:16.5px;color:var(--muted)}
+@media (min-width:900px){.about{padding:28px}.about-grid{grid-template-columns:repeat(3,1fr);gap:22px}}
+/* compass */
+.cgrid{display:grid;gap:14px}
+.roles{display:grid;gap:12px}
+.role{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px}
+.role-top{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center}
+.role h3{font-size:20px;letter-spacing:-.01em}
+.role .meta{font-size:15px;color:var(--muted);margin-top:2px}
+.role .test{font-family:var(--body);font-size:17px;background:var(--blue-soft);border-radius:var(--r-sm);padding:10px 12px}
+.role .test b{display:block;font-family:var(--display);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-ink);margin-bottom:2px}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:13.5px;padding:5px 10px;border-radius:999px;background:var(--sunk);color:var(--muted);font-weight:500}
+.tag.hit{background:var(--teal-soft);color:var(--teal-ink)}
+.tag.warn{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
+.ring{width:56px;height:56px;display:block}
+.ring text{font-family:var(--display);font-weight:800;font-size:17px;fill:var(--ink)}
+.role .act{display:grid;grid-template-columns:1fr auto;gap:8px}
+.sheet{display:grid;gap:16px;align-content:start}
+.sheet-head{display:flex;justify-content:space-between;align-items:center}
+.sheet-head b{font-size:18px}
+.grab{width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 4px}
+.scrim{position:fixed;inset:0;background:rgba(10,8,30,.45);z-index:44}
+@media (max-width:899px){
+  .sheet{position:fixed;left:0;right:0;bottom:0;z-index:45;background:var(--surface);border-radius:26px 26px 0 0;max-height:86%;overflow:auto;
+    padding:10px var(--gr) calc(16px + env(safe-area-inset-bottom,0px)) var(--gl);transform:translateY(105%);transition:transform .28s ease;box-shadow:0 -10px 40px rgba(10,8,30,.25)}
+  .sheet.open{transform:none}
+  .sheet .desk-only{display:none}
+}
+
+/* studio */
+.sgrid{display:grid;gap:14px}
+.meter{display:flex;align-items:center;gap:10px;font-size:13.5px;color:var(--muted);font-weight:600}
+.meter .track{flex:1;height:8px;background:var(--sunk);border-radius:8px;overflow:hidden;min-width:60px}
+.meter .fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--teal));border-radius:8px}
+details.more{border-top:1px solid var(--line);padding-top:10px}
+details.more summary{cursor:pointer;font-weight:600;font-size:13px;list-style:none}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:" +";color:var(--teal-ink)}
+details.more[open] summary::after{content:" –"}
+.dock{position:sticky;bottom:calc(var(--tab) + 10px + env(safe-area-inset-bottom,0px));z-index:20;display:grid;gap:6px;
+  background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-radius:var(--r);padding:8px}
+.status{font-size:14px;color:var(--muted);min-height:16px;text-align:center}
+.out{display:grid;gap:12px;min-width:0}
+.verdict{font-family:var(--body);font-size:19.5px;line-height:1.45;background:var(--blue-soft);border-left:4px solid var(--pink);border-radius:var(--r-sm);padding:13px 15px}
+.card h3{font-size:18px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.map{display:grid}
+.maprow{display:grid;grid-template-columns:12px 1fr;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.maprow i{width:10px;height:10px;border-radius:50%;margin-top:6px;display:block}
+.maprow b{font-weight:600;display:block}
+.maprow span{font-family:var(--body);font-size:16.5px;color:var(--muted)}
+.s-strong{background:var(--blue)} .s-partial{background:var(--warn)} .s-missing{background:var(--bad)} .s-ink{background:var(--indigo)}
+.legend{display:flex;gap:12px;font-size:13px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.prose{font-family:var(--body);font-size:17.5px;line-height:1.55;white-space:pre-wrap}
+ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body);font-size:17px}
+.locked{opacity:.6}
+
+/* workshop */
+.wgrid{display:grid;gap:14px}
+.panelpick{display:grid;gap:8px}
+.pp{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;text-align:left;border:1px solid var(--line);background:var(--surface);border-radius:var(--r-sm);padding:12px 14px}
+.pp b{font-size:16.5px}.pp small{display:block;font-size:14px;color:var(--muted)}
+.pp i{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);display:block}
+.pp[aria-pressed="true"]{border-color:var(--teal);background:var(--teal-soft)}
+.pp[aria-pressed="true"] i{border:6px solid var(--teal)}
+.ledger{display:grid;gap:9px}
+.lrow{display:grid;grid-template-columns:130px 1fr 42px;gap:10px;align-items:center;font-size:14.5px}
+.lrow .t{height:10px;background:var(--sunk);border-radius:6px;overflow:hidden}
+.lrow .t div{height:100%;background:var(--blue);border-radius:6px}
+.lrow .v{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.qcard{background:var(--hero);color:#fff;border-radius:var(--r);padding:18px;display:grid;gap:12px}
+.qcard .eyebrow{color:var(--pink)}
+.qtext{font-family:var(--serif);font-weight:400;font-size:clamp(23px,6.2vw,30px);line-height:1.28}
+.qmeta{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.clock{font-family:var(--mono);font-size:20px;font-variant-numeric:tabular-nums;background:rgba(255,255,255,.14);color:#fff;border-radius:999px;padding:3px 11px;white-space:nowrap}
+.clock.over{background:var(--warn);color:#fff}
+.progress{display:flex;gap:4px}
+.progress i{flex:1;height:5px;border-radius:3px;background:rgba(255,255,255,.2)}
+.progress i.done{background:var(--pink)}
+.progress i.now{background:#fff}
+.cam{position:relative;background:#06051A;border-radius:var(--r-sm);overflow:hidden;aspect-ratio:3/4;max-width:100%;max-height:60vh;display:grid;place-items:center;margin-inline:auto;width:100%}
+.cam video{width:100%;height:100%;object-fit:cover;display:block}
+.cam .ovl{position:absolute;inset:auto 0 0 0;display:flex;justify-content:space-between;align-items:center;padding:12px;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-family:var(--mono);font-size:12px}
+.cam{cursor:pointer}
+.recbig{display:inline-block;width:64px;height:64px;border-radius:50%;border:4px solid #fff;position:relative}
+.recbig::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#FF4D5E}
+.cam .ph{color:#A6A3C8;font-family:var(--body);font-size:16px;padding:24px;text-align:center}
+.recdot{display:inline-flex;align-items:center;gap:6px}.recdot::before{content:"";width:9px;height:9px;border-radius:50%;background:#FF4D5E}
+.scores{display:grid;gap:9px}
+.srow{display:grid;grid-template-columns:118px 1fr 34px;gap:10px;align-items:center;font-size:15px}
+.srow .t{display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.srow .t i{height:8px;border-radius:3px;background:var(--sunk)}
+.srow .t i.on{background:var(--blue)}
+.srow .t i.on.lo{background:var(--warn)}
+.srow .v{font-family:var(--mono);text-align:right;font-size:12px}
+.two{display:grid;gap:14px}
+.two ul{margin:0;padding-left:20px;font-family:var(--body);font-size:16.5px;display:grid;gap:4px}
+.two h4{margin:0 0 6px;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.probe{background:var(--surface);border:1px dashed var(--pink);border-radius:var(--r-sm);padding:13px 15px;font-family:var(--body);font-size:17.5px}
+.probe b{font-family:var(--display);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--pink-ink);display:block;margin-bottom:3px}
+.bank{display:grid;max-height:480px;overflow:auto;border-top:1px solid var(--line)}
+.bq{display:grid;grid-template-columns:1fr auto;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);align-items:start}
+.bq p{font-family:var(--body);font-size:15.5px}
+.bq small{font-size:12px;color:var(--muted);display:block;margin-top:3px}
+.bq button{border:0;background:var(--teal-soft);color:var(--teal-ink);border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.live{display:grid;gap:12px}
+.live h3{font-size:20px}
+.sumgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sumgrid div{background:var(--sunk);border-radius:var(--r-sm);padding:10px;display:grid;gap:2px}
+.sumgrid b{font-size:24px;font-variant-numeric:tabular-nums}
+.sumgrid small{font-size:11px;color:var(--muted);font-weight:600}
+.in-session .setup-only{display:none}
+
+/* plans */
+.plan{width:min(80vw,300px);background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;display:grid;gap:12px;align-content:start}
+.plan.feat{border:2px solid var(--teal)}
+.plan h3{font-size:22px}
+.price{font-size:40px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums;line-height:1}
+.price small{font-size:14px;font-weight:500;letter-spacing:0;opacity:.7}
+.plan ul{margin:0;padding-left:20px;display:grid;gap:7px;font-size:16px}
+.who-for{font-family:var(--body);font-size:17px;color:var(--muted)}
+.badge{font-size:11px;font-weight:600;background:var(--teal);color:var(--on-teal);border-radius:999px;padding:3px 9px}
+.addon{display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;padding:14px 0;border-top:1px solid var(--line)}
+.addon b{font-size:16.5px}.addon span{font-family:var(--body);font-size:16px;color:var(--muted);grid-column:1}
+.addon .pr{font-weight:800;font-size:18px;text-align:right}
+.addon button{grid-column:2;grid-row:2}
+.note{font-size:14px;color:var(--muted);background:var(--sunk);border-radius:var(--r-sm);padding:12px}
+.toast{position:fixed;left:50%;bottom:calc(var(--tab) + 18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:999px;font-size:14px;font-weight:500;z-index:60;max-width:calc(100% - 32px);text-align:center}
+
+/* ---------- laptop / desktop ---------- */
+@media (min-width:900px){
+  :root{--tab:0px}
+  .shell{display:grid;grid-template-columns:248px minmax(0,1fr)}
+  .side{display:flex;flex-direction:column;gap:22px;position:sticky;top:0;height:100dvh;padding:22px 16px;border-right:1px solid var(--line);background:var(--surface)}
+  .side nav{display:grid;gap:4px}
+  .side nav button{display:flex;align-items:center;gap:12px;border:0;background:none;border-radius:12px;padding:10px 12px;font-weight:600;color:var(--muted);text-align:left}
+  .side nav button:hover{background:var(--sunk);color:var(--ink)}
+  .side nav button[aria-current="page"]{background:var(--teal-soft);color:var(--teal-ink)}
+  .side .plan-mini{margin-top:auto;background:var(--sunk);border-radius:var(--r-sm);padding:14px;display:grid;gap:8px}
+  .side .plan-mini b{font-size:15px}
+  .tabbar{display:none}
+  .top .brand{display:none}
+  .top{padding-left:32px;padding-right:32px}
+  main{padding:8px 32px 56px}
+  .toast{bottom:28px}
+  .rail{grid-auto-flow:row;overflow:visible;margin:0;padding:0}
+  .rail.tools{grid-template-columns:repeat(3,1fr)}
+  .rail.tips{grid-template-columns:repeat(5,1fr)}
+  .rail.plans{grid-template-columns:repeat(3,1fr)}
+  .tool,.tip,.plan{width:auto}
+  .chiprow{margin:0;padding:0;flex-wrap:wrap}
+  .hero{grid-template-columns:1.2fr 1fr;align-items:end;padding:36px;gap:24px}
+  .hero .photo{grid-row:1/4;grid-column:2;aspect-ratio:4/3}
+  .home-two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .cgrid{grid-template-columns:320px minmax(0,1fr);align-items:start}
+  .sheet{position:sticky;top:76px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+  .sheet .grab,.sheet .mob-only,#edit-search,#sum-chips{display:none}
+  .sgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+  .sgrid>.inputs{position:sticky;top:76px}
+  .dock{position:static;background:none;backdrop-filter:none;padding:0}
+  .status{text-align:left}
+  .wgrid{grid-template-columns:340px minmax(0,1fr);align-items:start}
+  .wgrid>.setup-col{position:sticky;top:76px}
+  .in-session .setup-only{display:grid}
+  .two{grid-template-columns:1fr 1fr}
+  .sumgrid{grid-template-columns:repeat(5,1fr)}
+  .live{grid-template-columns:280px 1fr auto;align-items:center}
+  .cam{aspect-ratio:16/9;max-height:none}
+  .bank{grid-template-columns:1fr 1fr;column-gap:24px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+<script defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="side" aria-label="Main">
+    <div class="brand"><span class="mark" aria-hidden="true"><i style="background:var(--d1)"></i><i style="background:var(--d2)"></i><i style="background:var(--d3)"></i><i style="background:var(--d4)"></i></span>meraki</div>
+    <nav id="side-nav"></nav>
+    <div class="plan-mini"><span class="eyebrow">Your plan</span><b>Free</b><div class="meter"><div class="track"><div class="fill" data-fill style="width:80%"></div></div><span data-count>8</span></div><button class="btn sm teal" data-go="plans">Get a Search Pass</button></div>
+  </aside>
+
+  <div class="col">
+    <header class="top">
+      <div class="brand"><span class="mark" aria-hidden="true"><i style="background:var(--d1)"></i><i style="background:var(--d2)"></i><i style="background:var(--d3)"></i><i style="background:var(--d4)"></i></span>meraki</div>
+      <div class="top-r">
+        <span class="credit" title="AI uses left"><i>AI</i><span data-count>8</span> left</span>
+        <button class="avatar" aria-label="Account" data-go="plans"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></button>
+      </div>
+    </header>
+
+    <main>
+<!-- HOME -->
+<section data-view="home">
+  <div class="hero">
+    <span class="eyebrow" id="greet">μεράκι · meraki</span>
+    <h1>Lead with<br><em>soul.</em></h1>
+    <p>Search firms are retained by schools. <b>Meraki is retained by you.</b></p>
+    <figure class="photo" data-slot="hero" style="--fp:60% 40%"><figcaption>Photo · a school leader with students at a robotics table</figcaption></figure>
+    <div class="row"><button class="btn teal" data-go="compass">Build my search</button><button class="btn ghost" data-go="workshop">Practise a panel</button></div>
+  </div>
+
+  <div class="home-two">
+    <button class="card match" id="home-match" data-go="compass" style="text-align:left;color:inherit"></button>
+    <div class="card flip">
+      <div class="old"><span class="eyebrow">The market today</span><p>The school is the client. You wait and guess.</p></div>
+      <div class="new"><span class="eyebrow">With Meraki</span><p>You are the client. You see fit, the panel's questions and your own feedback.</p></div>
+    </div>
+  </div>
+
+  <h2 class="sh">Your tools</h2>
+  <div class="rail tools">
+    <button class="tool" data-go="compass"><figure class="photo" data-slot="compass" style="--fp:50% 45%"><figcaption>Photo · an international school campus from above</figcaption></figure><div><span class="eyebrow">Tailored search</span><h3>Compass</h3><p>Every brief scored against your role, region, curriculum, governance and family.</p><span class="go">Open Compass →</span></div></button>
+    <button class="tool" data-go="studio"><figure class="photo" data-slot="studio" style="--fp:45% 30%"><figcaption>Photo · a leader reviewing work on a laptop</figcaption></figure><div><span class="eyebrow">Application support</span><h3>Studio</h3><p>Your letter read the way a search partner reads it in the first sixty seconds.</p><span class="go">Open Studio →</span></div></button>
+    <button class="tool" data-go="workshop"><figure class="photo" data-slot="workshop" style="--fp:45% 40%"><figcaption>Photo · leaders mapping ideas at a workshop</figcaption></figure><div><span class="eyebrow">Interview practice</span><h3>Workshop</h3><p>Mock panels and filmed one-way interviews with instant feedback.</p><span class="go">Open Workshop →</span></div></button>
+  </div>
+
+  <section class="about" aria-labelledby="about-h">
+    <span class="eyebrow">About Meraki</span>
+    <h2 id="about-h">Built by school leaders who've sat on both sides of the table.</h2>
+    <div class="about-grid">
+      <div><b>Who we are</b><p>Serving international school leaders who have run searches, sat on panels and been through them as candidates. We built the tool we wished we'd had.</p></div>
+      <div><b>Why it exists</b><p>Search firms work for schools. Candidates prepare alone, guess what the panel wants and often hear nothing back. Meraki works for you.</p></div>
+      <div><b>Your search stays yours</b><p>Your letters, evidence and recordings are private to you. Nothing goes to a school or a search firm without your say-so, and you can delete it all at any time.</p></div>
+    </div>
+  </section>
+
+  <h2 class="sh">Five things a shortlist turns on <small>swipe</small></h2>
+  <div class="rail tips" id="rules"></div>
+
+  <div class="card share">
+    <span class="eyebrow">Pass it on</span>
+    <h2>Know a leader<br>ready to <span>step up?</span></h2>
+    <p class="share-p">Send them Meraki. The search tools and 10 AI uses are free to try.</p>
+    <div class="invite" id="invite-text"></div>
+    <div class="share-row">
+      <button class="btn teal" id="sh-copy">Copy invite</button>
+      <a class="btn share-out" id="sh-wa" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn share-out" id="sh-li" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <span class="share-tag">#LeadWithSoul</span>
+  </div>
+</section>
+
+<!-- COMPASS -->
+<section data-view="compass" hidden>
+  <div class="vh"><div><span class="eyebrow">Compass</span><h1 class="page-h">Your search, scored.</h1></div><button class="btn sm ghost" id="edit-search">Edit</button></div>
+  <div class="chiprow" id="sum-chips"></div>
+  <div class="cgrid">
+    <form class="sheet" id="sheet" onsubmit="return false" aria-label="Your search">
+      <div class="grab mob-only"></div>
+      <div class="sheet-head"><b>Your search</b><button type="button" class="btn sm ghost mob-only" id="sheet-x">Done</button></div>
+      <div class="field"><label for="f-level">Role level</label>
+        <select id="f-level"><option value="head">Head / Principal</option><option value="deputy">Deputy / Second Master</option><option value="section">Head of Secondary / Senior School</option><option value="middle">Head of Department / Faculty</option></select></div>
+      <div class="field"><span class="lab">Regions</span><div class="chips" data-group="region"></div></div>
+      <div class="field"><span class="lab">Curricula</span><div class="chips" data-group="curr"></div></div>
+      <div class="field" hidden><span class="lab">Governance</span><div class="chips" data-group="gov"></div></div>
+      <div class="field" hidden><label for="f-size">School size</label>
+        <select id="f-size"><option value="any">Any</option><option value="s">Under 800</option><option value="m">800–1,600</option><option value="l">1,600+</option></select></div>
+      <div class="field" hidden><span class="lab">Values that matter to me</span><div class="chips" data-group="val"></div></div>
+      <div class="field" hidden><span class="lab">Family</span><div class="chips" data-group="fam"></div></div>
+      <div class="field"><label for="f-start">Earliest start</label>
+        <select id="f-start"><option value="2027-07">July 2027</option><option value="2027-01">January 2027</option><option value="2028-08">August 2028</option></select></div>
+      <button type="button" class="btn teal block mob-only" id="sheet-done">Show briefs</button>
+    </form>
+    <div class="roles" id="roles"></div>
+  </div>
+</section>
+
+<!-- STUDIO -->
+<section data-view="studio" hidden>
+  <div class="vh"><div><span class="eyebrow">Studio</span><h1 class="page-h">Read like the shortlister.</h1></div></div>
+  <p class="lede">Paste the brief and your letter. Get the verdict a search partner forms before page two.</p>
+  <div class="sgrid">
+    <div class="inputs" style="display:grid;gap:12px">
+      <div class="card">
+        <div class="seg" role="group" aria-label="AI capacity"><button id="t-std" aria-pressed="true">Standard</button><button id="t-adv" class="adv" aria-pressed="false">Advanced</button></div>
+        <div class="meter"><span id="m-label">AI uses left</span><div class="track"><div class="fill" data-fill style="width:80%"></div></div><span data-count>8</span></div>
+      </div>
+      <div class="card">
+        <div class="field"><label for="s-jd">Job brief</label><textarea id="s-jd" rows="7"></textarea></div>
+        <div class="field"><label for="s-letter">Your letter</label><textarea id="s-letter" rows="8"></textarea></div>
+        <details class="more"><summary>Evidence bank</summary><div class="field" style="margin-top:10px"><label for="s-bank" class="hint">Saved to your Passport and reused across applications</label><textarea id="s-bank" rows="5"></textarea></div></details>
+      </div>
+      <div class="dock"><button class="btn block" id="run">Read my application</button><span class="status" id="status" aria-live="polite"></span></div>
+    </div>
+    <div class="out" id="out"></div>
+  </div>
+</section>
+
+<!-- WORKSHOP -->
+<section data-view="workshop" hidden>
+  <div class="vh"><div><span class="eyebrow">Workshop</span><h1 class="page-h">Rehearse the real panel.</h1></div><button class="btn sm ghost mob-end" id="w-end" hidden>End</button></div>
+  <p class="lede setup-only">Questions modelled on real international school panels, tailored to you and the role. Answer in writing or on camera.</p>
+  <div class="wgrid">
+    <div class="setup-col setup-only" style="display:grid;gap:12px">
+      <div class="card">
+        <div class="field"><span class="lab">Choose your panel</span><div class="panelpick" id="w-panels"></div></div>
+        <div class="field"><span class="lab">Format</span><div class="seg" role="group" aria-label="Format"><button type="button" id="w-typed" aria-pressed="true">Typed</button><button type="button" id="w-video" aria-pressed="false">One-way video</button></div></div>
+        <div class="field"><span class="lab">Questions</span><div class="seg" id="w-n" role="group" aria-label="Number of questions"><button type="button" data-n="3" aria-pressed="false">3</button><button type="button" data-n="5" aria-pressed="true">5</button><button type="button" data-n="8" aria-pressed="false">8</button></div></div>
+        <div class="field"><span class="lab">AI capacity</span><div class="seg" role="group" aria-label="AI capacity"><button type="button" id="w-std" aria-pressed="true">Standard</button><button type="button" id="w-adv" class="adv" aria-pressed="false">Advanced</button></div>
+          <span class="hint">Advanced asks live follow-up probes and reads your on-camera delivery.</span></div>
+        <div class="field"><label for="w-me">About you</label><textarea id="w-me" rows="3" placeholder="Current role, career route, two or three highlights"></textarea></div>
+        <div class="field"><label for="w-ctx">The role you're preparing for</label><textarea id="w-ctx" rows="2" placeholder="e.g. Head of School, independent day school, 850 students"></textarea></div>
+        <button class="btn teal block" id="w-start">Start mock interview</button>
+      </div>
+      <div class="card">
+        <h3>What panels actually ask</h3>
+        <p class="hint">Themes that come up most often across real panel transcripts.</p>
+        <div class="ledger" id="w-insight"></div>
+      </div>
+    </div>
+    <div id="ws-stage" class="out"></div>
+  </div>
+  <div class="card live setup-only">
+    <figure class="photo" data-slot="live" style="--fp:55% 45%"><figcaption>Photo · a leadership workshop in session</figcaption></figure>
+    <div><span class="eyebrow">Coming next</span><h3>Meraki Sessions</h3><p class="hint">Live mock panels with a former head and a search partner, and small-group workshops for aspiring heads.</p></div>
+    <button class="btn sm ghost" data-go="plans">See pricing</button>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section data-view="plans" hidden>
+  <div class="vh"><div><span class="eyebrow">Plans</span><h1 class="page-h">Pay only while you search.</h1></div></div>
+  <p class="lede">No subscription. Buy a Search Pass for one, two or three months: one payment, no renewal. A leadership search often runs about three months from application to offer. Proposed launch prices.</p>
+  <div class="rail plans" id="plans"></div>
+  <div class="card"><h3>One-off</h3><div id="addons"></div></div>
+  <div class="card" id="access-card"><h3>Your access</h3><div id="access-box"></div>
+    <div class="row"><input type="text" id="acc-code" placeholder="Paste an access code" aria-label="Access code" style="flex:1;min-width:0"><button class="btn sm" id="acc-add">Add</button></div></div>
+  <p class="note" id="checkout-note">Free includes Compass, typed mock panels and 10 AI uses. Passes, credits and sessions are single payments through Stripe. Access ends when the pass ends; buy another any time. Prices in US dollars.</p>
+</section>
+    </main>
+  </div>
+</div>
+
+<nav class="tabbar" id="tab-nav" aria-label="Sections"></nav>
+<div class="scrim" id="scrim" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+(function(){
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem("meraki."+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("meraki."+k,JSON.stringify(v))}catch(e){}}};
+function toast(t){const el=$("#toast");el.textContent=t;el.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>el.hidden=true,2600)}
+function esc(s){return String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+const isDesk=()=>matchMedia("(min-width:900px)").matches;
+
+/* ---------- nav ---------- */
+const ICONS={home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ compass:'<circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/>',
+ studio:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="m13.5 6.5 4 4"/>',
+ workshop:'<rect x="3" y="6" width="13" height="12" rx="3"/><path d="m16 10.5 5-3v9l-5-3z"/>',
+ plans:'<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3 10h18M7 15h4"/>'};
+const NAV=[["home","Home"],["compass","Compass"],["studio","Studio"],["workshop","Workshop"],["plans","Plans"]];
+$("#tab-nav").innerHTML=NAV.map(([k,l])=>`<button data-go="${k}"><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg></span>${l}</button>`).join("");
+$("#side-nav").innerHTML=NAV.map(([k,l])=>`<button data-go="${k}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS[k]}</svg>${l}</button>`).join("");
+const views=NAV.map(n=>n[0]);
+function go(v){if(!views.includes(v))v="home";closeSheet();
+  $$("section[data-view]").forEach(s=>s.hidden=s.dataset.view!==v);
+  $$("#tab-nav button,#side-nav button").forEach(b=>{if(b.dataset.go===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
+  try{history.replaceState(null,"","#"+v)}catch(e){} window.scrollTo(0,0)}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-go]");if(b)go(b.dataset.go)});
+const hr=new Date().getHours();$("#greet").textContent=(hr<12?"Good morning":hr<18?"Good afternoon":"Good evening")+" · μεράκι";
+
+/* ---------- home ---------- */
+const RULES=[
+ ["Anchor the opening in this school","A paragraph that could go to any school is the first thing a shortlister discounts."],
+ ["Use the brief's own headings","Build the letter on the competencies the panel will score, in their order."],
+ ["Evidence, then impact","Every claim carries one measured outcome."],
+ ["Keep your distinctive thread","An unusual route into leadership is memorable. Carry it lightly."],
+ ["Close on an idea","A conceptual last paragraph is what a panel remembers after twelve letters."]];
+$("#rules").innerHTML=RULES.map((r,i)=>`<div class="tip"><span class="n">${i+1}</span><b>${esc(r[0])}</b><span>${esc(r[1])}</span></div>`).join("");
+const SHARE_URL=location.origin;
+const INVITE=`I've been using Meraki to prepare for school leadership roles. It scores live vacancies against what you want, reads your letter like a search partner and runs mock panels on camera. Worth a look: ${SHARE_URL}`;
+$("#invite-text").textContent=INVITE;
+$("#sh-wa").href="https://wa.me/?text="+encodeURIComponent(INVITE);
+$("#sh-li").href="https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(SHARE_URL);
+$("#sh-copy").onclick=()=>{navigator.clipboard?.writeText(INVITE).then(()=>toast("Invite copied. Paste it anywhere.")).catch(()=>{const r=document.createRange();r.selectNodeContents($("#invite-text"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);toast("Invite selected. Copy it to share.")})};
+
+
+/* ---------- compass ---------- */
+const OPTS={region:["Gulf","Southeast Asia","East Asia","South Asia","Western Europe","United Kingdom","Africa","Americas"],curr:["British","IB","American","Bilingual"],gov:["Not-for-profit","Group-owned","Foundation","Proprietor"],
+ val:["Distributed leadership","Wellbeing","Sustainability","Access & inclusion","Innovation","Boarding life"],fam:["Partner teaching post","Children's places","Relocation support"]};
+const DEF={region:["Gulf","Southeast Asia","East Asia","Western Europe"],curr:["British","IB"],gov:["Not-for-profit","Foundation"],val:["Distributed leadership","Access & inclusion","Innovation"],fam:["Children's places"]};
+const pro=store.get("pro",{level:"head",size:"any",start:"2027-07",...JSON.parse(JSON.stringify(DEF))});
+$$("[data-group]").forEach(g=>{const k=g.dataset.group;g.innerHTML=OPTS[k].map(o=>`<button type="button" class="chip" aria-pressed="${(pro[k]||[]).includes(o)}" data-v="${esc(o)}">${esc(o)}</button>`).join("");
+  g.addEventListener("click",e=>{const c=e.target.closest(".chip");if(!c)return;const on=c.getAttribute("aria-pressed")!=="true";c.setAttribute("aria-pressed",on);
+    pro[k]=on?[...(pro[k]||[]),c.dataset.v]:(pro[k]||[]).filter(x=>x!==c.dataset.v);save()})});
+["level","size","start"].forEach(k=>{const el=$("#f-"+k);el.value=pro[k];el.addEventListener("change",()=>{pro[k]=el.value;save()})});
+function save(){store.set("pro",pro);renderRoles()}
+function openSheet(){if(isDesk())return;$("#sheet").classList.add("open");$("#scrim").hidden=false}
+function closeSheet(){$("#sheet").classList.remove("open");$("#scrim").hidden=true}
+$("#edit-search").onclick=openSheet;$("#sheet-x").onclick=closeSheet;$("#sheet-done").onclick=closeSheet;$("#scrim").onclick=closeSheet;
+$("#sum-chips").addEventListener("click",openSheet);
+
+/* Live vacancies gathered 21–23 Oct 2026 from Tes, Perrett Laver, LSC Education, SchoolRubric, ISS and RG175 listings. Check each original posting. */
+const ROLES=[{"school": "Kent College West Cairo", "title": "Head of College", "where": "Cairo, Egypt", "level": "head", "region": "Africa", "curr": ["British"], "start": "Aug 2027", "closes": "26 Oct 2026", "by": "RSAcademics", "url": "https://www.rsacademics.com/current-vacancies/head-of-college-kent-college-west-cairo/", "test": "Building a young UK-branded school: culture, staffing and parent confidence.", "id": 2}, {"school": "International School of London Qatar", "title": "Head of School", "where": "Doha, Qatar", "level": "head", "region": "Gulf", "curr": ["IB"], "start": "Aug 2027", "closes": "30 Oct 2026", "by": "RSAcademics", "url": "https://www.rsacademics.com/current-vacancies/isl-qatar/", "test": "Whole-school IB leadership and growth in a competitive Gulf market.", "id": 3}, {"school": "American Embassy School", "title": "High School Principal", "where": "New Delhi, India", "level": "section", "region": "South Asia", "curr": ["American", "IB"], "start": "Jul 2027", "closes": "9 Nov 2026", "by": "Search Associates", "url": "https://www.searchassociates.com/job-ad/high-school-principal-3/", "test": "High school academic standards, university guidance and a mobile community.", "id": 4}, {"school": "American School of Dubai", "title": "Elementary Principal", "where": "Dubai, UAE", "level": "section", "region": "Gulf", "curr": ["American"], "start": "Aug 2027", "closes": "13 Nov 2026", "by": "ISS", "url": "https://eduplatform.iss.edu/s/external-job?job=a1JQm00000COTZpMAP", "test": "Early childhood and primary leadership, ages 0 to 11.", "id": 5}, {"school": "Sias International School", "title": "Head of School", "where": "Zhengzhou, China", "level": "head", "region": "East Asia", "curr": [], "start": "Jul 2027", "closes": "13 Nov 2026", "by": "Search Associates", "url": "https://www.searchassociates.com/job-ad/head-of-school-2/", "test": "Leading within a host-country regulatory context and a university-linked owner.", "id": 6}, {"school": "Chrysalis International Academy", "title": "Founding Principal", "where": "Dubai, UAE", "level": "head", "region": "Gulf", "curr": [], "start": "Mar 2027", "closes": "16 Nov 2026", "by": "RSAcademics", "url": "https://www.rsacademics.com/current-vacancies/founding-principal-chrysalis-international-academy-dubai/", "test": "Founding role: hiring the first team, admissions from zero and owner relations.", "id": 7}, {"school": "Taipei American School", "title": "Head of School", "where": "Taipei, Taiwan", "level": "head", "region": "East Asia", "curr": ["American"], "start": "Jul 2027", "closes": "30 Nov 2026", "by": "RG175", "url": "https://rg175.com/current-search/672", "test": "Leading a large, high-performing school with a strong board and alumni.", "id": 8}, {"school": "Canadian International School of Phnom Penh", "title": "Middle and High School Principal", "where": "Phnom Penh, Cambodia", "level": "section", "region": "Southeast Asia", "curr": [], "start": "Aug 2027", "closes": "1 Jan 2027", "by": "Search Associates", "url": "https://www.searchassociates.com/job-ad/middle-school-high-school-principal/", "test": "Secondary phase leadership across two age ranges.", "id": 9}, {"school": "American International School Vienna", "title": "Director", "where": "Vienna, Austria", "level": "head", "region": "Western Europe", "curr": ["American", "IB"], "start": "Aug 2028", "closes": "5 Jan 2027", "by": "RG175", "url": "https://rg175.com/current-search/674", "test": "Headship with a long lead time: board partnership and strategic planning.", "id": 10}, {"school": "Chinese International School", "title": "Secondary School Head", "where": "Hong Kong", "level": "section", "region": "East Asia", "curr": ["IB", "Bilingual"], "start": "Jul 2027", "closes": "Rolling", "by": "Carney Sandoe", "url": "https://www.carneysandoe.com/wp-content/uploads/2026/05/CIS-Head-of-Secondary-06.02-2.pdf", "test": "Bilingual IB secondary leadership in one of Hong Kong's most selective schools.", "id": 11}, {"school": "American School of Bangkok", "title": "Head of School", "where": "Bangkok, Thailand", "level": "head", "region": "Southeast Asia", "curr": ["American"], "start": "Jul 2027", "closes": "Rolling", "by": "Carney Sandoe", "url": "https://www.carneysandoe.com/wp-content/uploads/2026/08/American-School-Bangkok-08.19-2.pdf", "test": "Headship in a crowded Bangkok market: positioning and enrolment.", "id": 12}, {"school": "Mooltripakdee International School", "title": "Head of School", "where": "Pattaya, Thailand", "level": "head", "region": "Southeast Asia", "curr": [], "start": "Jul 2027", "closes": "Open", "by": "ISS", "url": "https://www.iss.edu/wp-content/uploads/ISS-Mooltripakdee-International-School-Head-of-School-2026.pdf", "test": "Headship of a smaller school: hands-on leadership across every function.", "id": 13}, {"school": "Shanghai American School", "title": "Head of School", "where": "Shanghai, China", "level": "head", "region": "East Asia", "curr": ["American", "IB"], "start": "Jul 2028", "closes": "Rolling", "by": "Carney Sandoe", "url": "https://www.carneysandoe.com/wp-content/uploads/2026/05/Shanghai-American-School-HOS-06.08-2.pdf", "test": "Multi-campus headship with a long lead time.", "id": 14}, {"school": "International School of Hamburg", "title": "Head of School", "where": "Hamburg, Germany", "level": "head", "region": "Western Europe", "curr": ["IB"], "start": "Aug 2028", "closes": "Coming soon", "by": "RG175", "url": "https://rg175.com/current-search/681", "test": "IB continuum headship in a German city; brief not yet published.", "id": 15}, {"school": "British School of Barcelona", "title": "Head of Secondary", "where": "Castelldefels, Spain", "level": "section", "region": "Western Europe", "curr": ["British"], "start": "", "closes": "23 Oct 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-secondary-spain-2350475", "test": "Secondary phase leadership: standards, consistency of teaching and the pastoral system.", "id": 16}, {"school": "King's College International School Bangkok", "title": "Head of Senior School", "where": "Bangkok, Thailand", "level": "section", "region": "Southeast Asia", "curr": ["British"], "start": "Aug 2027", "closes": "30 Oct 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-senior-school-thailand-2349031", "test": "Secondary phase leadership: standards, consistency of teaching and the pastoral system.", "id": 18}, {"school": "Smart Vision School", "title": "Head of Secondary", "where": "UAE", "level": "section", "region": "Gulf", "curr": [], "start": "", "closes": "31 Oct 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-secondary-united-arab-emirates-2342561", "test": "Secondary phase leadership: standards, consistency of teaching and the pastoral system.", "id": 19}, {"school": "International Schools Partnership", "title": "Head of School / Principal", "where": "India", "level": "head", "region": "South Asia", "curr": [], "start": "", "closes": "30 Oct 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-school-principal-india-2341289", "test": "Headship within a group: growth targets, operating discipline and group reporting.", "id": 20}, {"school": "St. Julian's School", "title": "Head of Prep School", "where": "Carcavelos, Portugal", "level": "section", "region": "Western Europe", "curr": ["British", "IB"], "start": "", "closes": "2 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-prep-school-portugal-2351367", "test": "Primary phase leadership: early years to Year 6, curriculum and parent partnership.", "id": 21}, {"school": "Hillview International School", "title": "Principal", "where": "Malawi", "level": "head", "region": "Africa", "curr": [], "start": "Aug 2027", "closes": "2 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/principal-malawi-2345402", "test": "Headship of a smaller school: hands-on leadership across every function.", "id": 22}, {"school": "Sardinia International School", "title": "Head of Secondary", "where": "Olbia, Italy", "level": "section", "region": "Western Europe", "curr": [], "start": "", "closes": "18 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-secondary-olbia-sardinia-italy-2350983", "test": "Building a secondary phase in a growing school.", "id": 23}, {"school": "Abdul Rahman Kanoo School (ARKS)", "title": "Principal", "where": "Diyar, Bahrain", "level": "head", "region": "Gulf", "curr": ["British"], "start": "", "closes": "29 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/principal-nursery-to-yr-11-bahrain-2318397", "test": "Headship from nursery to Year 11: growth, standards and community.", "id": 24}, {"school": "Malvern College Tokyo", "title": "Head of Seniors", "where": "Tokyo, Japan", "level": "section", "region": "East Asia", "curr": ["British"], "start": "", "closes": "30 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-seniors-tokyo-2349887", "test": "Senior school leadership in a young UK-branded school: culture and standards.", "id": 25}, {"school": "GEMS Al Barsha National School", "title": "Head of Secondary", "where": "Dubai, UAE", "level": "section", "region": "Gulf", "curr": [], "start": "Aug 2027", "closes": "3 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-secondary-august-2027-united-arab-emirates-2343644", "test": "Secondary phase leadership: standards, consistency of teaching and the pastoral system.", "id": 26}, {"school": "New Cairo British International School", "title": "Head of Secondary School", "where": "Cairo, Egypt", "level": "section", "region": "Africa", "curr": ["British"], "start": "", "closes": "12 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-secondary-school-new-cairo-cairo-egypt-2347518", "test": "Secondary phase leadership: standards, consistency of teaching and the pastoral system.", "id": 27}, {"school": "Phorms School Frankfurt", "title": "Head of Secondary School", "where": "Steinbach, Germany", "level": "section", "region": "Western Europe", "curr": ["Bilingual"], "start": "", "closes": "15 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-secondary-school-steinbach-taunus-near-frankfurt-germany-2266056", "test": "Bilingual secondary leadership within German regulation.", "id": 28}, {"school": "Queen Elizabeth's School, Gurugram", "title": "Head of Senior School", "where": "Gurugram, India", "level": "section", "region": "South Asia", "curr": ["British"], "start": "Jan 2027", "closes": "30 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-senior-school-january-2027-india-2348666", "test": "Senior school leadership with a January start: fast induction and early wins.", "id": 29}, {"school": "Jinan Thomas International School", "title": "Principal", "where": "Shandong, China", "level": "head", "region": "East Asia", "curr": [], "start": "", "closes": "30 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/principal-shandong-2344235", "test": "Leading within a host-country regulatory context and owner relations.", "id": 30}, {"school": "PACE Modern British School", "title": "School Principal", "where": "UAE", "level": "head", "region": "Gulf", "curr": ["British"], "start": "", "closes": "31 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/school-principal-united-arab-emirates-2350615", "test": "Headship in a competitive UAE market: inspection outcomes and enrolment.", "id": 31}, {"id": 32, "school": "Roedean School", "title": "Head", "where": "Brighton, UK", "level": "head", "region": "United Kingdom", "curr": ["British"], "start": "", "closes": "29 Oct 2026", "by": "Perrett Laver", "url": "https://plusportal.perrettlaver.com/VacancyDetail/4c6db878-90b1-1d63-da51-3a2403a943ab", "test": "A compelling vision for an independent girls' boarding and day school, with presence and resilience."}, {"id": 33, "school": "IB World School (confidential)", "title": "Director", "where": "Mexico", "level": "head", "region": "Americas", "curr": ["IB"], "start": "Aug 2027", "closes": "Rolling", "by": "LSC Education", "url": "https://www.lsceducation.com/vacancies/director-3/", "test": "Headship of an IB continuum school; details sit in the LSC brief."}, {"id": 34, "school": "Al Salam Community School", "title": "Head of Humanities (Secondary)", "where": "UAE", "level": "middle", "region": "Gulf", "curr": [], "start": "Jan 2027", "closes": "24 Oct 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-humanities-secondary-january-2027-united-arab-emirates-2352478", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 35, "school": "Al Rabeeh Academy", "title": "Head of Performing Arts", "where": "Abu Dhabi, UAE", "level": "middle", "region": "Gulf", "curr": ["British"], "start": "Jan 2027", "closes": "29 Oct 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-performing-arts-abu-dhabi-2354439", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 36, "school": "British International School Riyadh", "title": "Curriculum Leader for Science", "where": "Riyadh, Saudi Arabia", "level": "middle", "region": "Gulf", "curr": ["British"], "start": "Aug 2027", "closes": "2 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/curriculum-leader-for-science-dq-campus-required-august-2027-riyadh-2353654", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 37, "school": "Denla British School", "title": "Head of Science", "where": "Bangkok, Thailand", "level": "middle", "region": "Southeast Asia", "curr": ["British"], "start": "", "closes": "9 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-science-thailand-2352784", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 38, "school": "Denla British School", "title": "Head of Humanities and Social Sciences Faculty", "where": "Bangkok, Thailand", "level": "middle", "region": "Southeast Asia", "curr": ["British"], "start": "", "closes": "9 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-humanities-and-social-sciences-faculty-thailand-2352750", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 39, "school": "Malvern College Chengdu", "title": "Head of English and Humanities (Seniors)", "where": "Chengdu, China", "level": "middle", "region": "East Asia", "curr": ["British"], "start": "", "closes": "19 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-english-and-humanities-seniors-sichuan-2353336", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 40, "school": "Malvern College Chengdu", "title": "Head of Mathematics (Seniors)", "where": "Chengdu, China", "level": "middle", "region": "East Asia", "curr": ["British"], "start": "", "closes": "19 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-mathematics-seniors-sichuan-2353332", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 41, "school": "Uppingham School Vietnam", "title": "Head of Technology and Digital Strategy", "where": "Hung Yen, Vietnam", "level": "middle", "region": "Southeast Asia", "curr": ["British"], "start": "", "closes": "29 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-technology-and-digital-strategy-uppingham-school-vietnam-hung-yen-lot-gd-07-van-giang-commercial-and-tourism-urban-area-phung-cong-commune-hung-yen-province-vietnam-2354607", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 42, "school": "Yas School", "title": "Head of Wellbeing", "where": "Abu Dhabi, UAE", "level": "middle", "region": "Gulf", "curr": [], "start": "", "closes": "29 Nov 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-wellbeing-united-arab-emirates-2353981", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 43, "school": "YK Pao School", "title": "Middle School Head of English", "where": "Shanghai, China", "level": "middle", "region": "East Asia", "curr": ["Bilingual"], "start": "Aug 2027", "closes": "30 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/middle-school-head-of-english-shanghai-2353290", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 44, "school": "YK Pao School", "title": "Middle School Head of Science (bilingual)", "where": "Shanghai, China", "level": "middle", "region": "East Asia", "curr": ["Bilingual"], "start": "Aug 2027", "closes": "30 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/middle-school-head-of-science-bilingual-in-both-chinese-and-english-shanghai-2351851", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 45, "school": "Woodstock School", "title": "Head of Mathematics", "where": "Mussoorie, India", "level": "middle", "region": "South Asia", "curr": [], "start": "Jul 2027", "closes": "30 Dec 2026", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-department-mathematics-india-2353665", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 46, "school": "King's College School Cascais", "title": "Head of Mathematics", "where": "Cascais, Portugal", "level": "middle", "region": "Western Europe", "curr": ["British"], "start": "", "closes": "2 Jan 2027", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-mathematics-portugal-2351695", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 47, "school": "SPGS International School Chengdu", "title": "Head of English", "where": "Chengdu, China", "level": "middle", "region": "East Asia", "curr": ["British"], "start": "Feb 2027", "closes": "29 Jan 2027", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-english-sichuan-2352111", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}, {"id": 48, "school": "Sir Manasseh Meyer International School", "title": "Head of English", "where": "Singapore", "level": "middle", "region": "Southeast Asia", "curr": [], "start": "", "closes": "31 Jan 2027", "by": "Tes", "url": "https://www.tes.com/jobs/vacancy/head-of-english-singapore-2352994", "test": "Department leadership: curriculum, consistency of teaching, outcomes and developing your team."}];
+function score(r){const hits=[];let s=0;
+  if(r.level===pro.level){s+=35;hits.push("Level")}else if(r.level==="middle"||pro.level==="middle"){s+=4}else if(pro.level==="head"&&r.level!=="head"){s+=12}else s+=18;
+  if((pro.region||[]).includes(r.region)){s+=30;hits.push(r.region)}
+  const cm=r.curr.filter(c=>(pro.curr||[]).includes(c));if(cm.length){s+=25;hits.push(...cm)}else if(!r.curr.length)s+=10;
+  const st={"2027-01":"2027-01","2027-07":"2027-07","2028-08":"2028-08"}[pro.start]||"2027-07";
+  const ym=!r.start?0:(t=>{const m={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};const pr=t.split(" "),y=pr.length>1?pr[1]:pr[0],mo=pr.length>1?pr[0]:"Aug";return +y*12+(m[mo]||7)})(r.start);
+  const [py,pm]=st.split("-").map(Number);if(!r.start)s+=5;else if(ym>=py*12+pm-1){s+=10}
+  return {s:Math.min(100,s),hits}}
+function ring(v,size){const c=2*Math.PI*24,col=v>=75?"var(--teal)":v>=55?"var(--blue)":"var(--muted)";
+  return `<svg class="ring" viewBox="0 0 56 56" role="img" aria-label="Fit ${v} percent"${size?` style="width:${size}px;height:${size}px"`:""}><circle cx="28" cy="28" r="24" fill="none" stroke="var(--sunk)" stroke-width="6"/><circle cx="28" cy="28" r="24" fill="none" stroke="${col}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${c*v/100} ${c}" transform="rotate(-90 28 28)"/><text x="28" y="34" text-anchor="middle">${v}</text></svg>`}
+function renderRoles(){
+  const list=ROLES.map(r=>({r,...score(r)})).sort((a,b)=>b.s-a.s),strong=list.filter(x=>x.s>=70).length;
+  const lv={head:"Head / Principal",deputy:"Deputy",section:"Section head",middle:"Head of Department / Faculty"}[pro.level];
+  $("#sum-chips").innerHTML=[lv,...(pro.region||[]),...(pro.curr||[])].map(x=>`<button type="button" class="chip" aria-pressed="true">${esc(x)}</button>`).join("");
+  $("#roles").innerHTML=`<div class="row" style="justify-content:space-between"><b>${strong} strong fits of ${list.length} live roles</b><span class="sample-flag">Listings as of 23 Oct 2026</span></div>`+
+  list.map(({r,s,hits})=>{const soon=/ Oct 2026|^[1-9] Nov 2026/.test(r.closes);const tagset=[r.curr.length?r.curr.join(" / "):"Curriculum: see brief",(r.start?"Starts "+r.start:"Start: see brief"),"via "+r.by];
+    return `<article class="role"><div class="role-top">${ring(s)}<div style="min-width:0"><h3>${esc(r.title)}</h3><div class="meta"><b>${esc(r.school)}</b> · ${esc(r.where)}</div></div></div>
+    <div class="tags"><span class="tag ${soon?"warn":""}">Closes ${esc(r.closes)}</span>${tagset.map(t=>`<span class="tag ${hits.some(h=>t.includes(h))?"hit":""}">${esc(t)}</span>`).join("")}</div>
+    <p class="test"><b>Likely panel focus</b>${esc(r.test)}</p>
+    <div class="act"><button class="btn sm" data-studio="${r.id}">Prepare in Studio</button><a class="btn sm ghost" href="${esc(r.url)}" target="_blank" rel="noopener">View brief</a></div></article>`}).join("")+
+  `<p class="hint">Gathered from <a href="https://www.tes.com/jobs/browse/headteacher-international" target="_blank" rel="noopener">Tes</a>, <a href="https://plusportal.perrettlaver.com/Search" target="_blank" rel="noopener">Perrett Laver</a>, <a href="https://schoolrubric.org/leadership-vacancies/" target="_blank" rel="noopener">SchoolRubric</a>, <a href="https://www.iss.edu/services/leadership-search/job-postings/" target="_blank" rel="noopener">ISS</a> and <a href="https://rg175.com/current-searches" target="_blank" rel="noopener">RG175</a>. The production app refreshes these daily.</p>`;
+  const top=list[0];
+  $("#home-match").innerHTML=`${ring(top.s,52)}<div style="min-width:0"><span class="eyebrow">Your best fit</span><b style="display:block">${esc(top.r.title)}</b><span class="serif">${esc(top.r.school)} · ${esc(top.r.where)}</span></div><span style="font-size:20px;color:var(--teal-ink)">→</span>`;
+}
+$("#roles").addEventListener("click",e=>{
+  const b=e.target.closest("[data-studio]");if(!b)return;const r=ROLES.find(x=>x.id==b.dataset.studio);
+  $("#s-jd").value=`${r.title}, ${r.school}, ${r.where}\nStart ${r.start} · closes ${r.closes} · search by ${r.by}\n\nPaste the full candidate brief here from: ${r.url}`;
+  go("studio");toast("Brief loaded into Studio")});
+renderRoles();
+
+/* ---------- AI capacity ---------- */
+let tier="standard";
+const ENT={passUntil:null,advanced:0,purchases:[]};
+const tokens=()=>store.get("tokens",[]);
+let freeUsed=+store.get("freeUsed",0)||0;
+const FREE_CAP=10;
+const quota={
+  standard:{label:"AI uses left",get cap(){return ENT.passUntil?Infinity:FREE_CAP},get used(){return ENT.passUntil?0:freeUsed},set used(v){if(!ENT.passUntil){freeUsed=v;store.set("freeUsed",v)}}},
+  advanced:{label:"Advanced credits",get cap(){return ENT.advanced},get used(){return 0},set used(v){refreshAccess()}}};
+async function refreshAccess(){const t=tokens();if(!t.length){renderPass();return}
+  try{const r=await fetch("/api/access",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({tokens:t})});
+    if(r.ok){const d=await r.json();Object.assign(ENT,d)}}catch(e){}
+  renderPass();meter()}
+function renderPass(){const mini=$(".plan-mini b");const d=ENT.passUntil&&new Date(ENT.passUntil);
+  if(mini)mini.textContent=d?"Search Pass · until "+d.toLocaleDateString("en-GB",{day:"numeric",month:"short"}):"Free";
+  const box=$("#access-box");if(!box)return;const t=tokens();
+  box.innerHTML=t.length?`<b>${d?"Your pass runs until "+d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):"No active pass"}</b><p class="hint">${ENT.advanced} Advanced credits left. To use Meraki on another device, copy your access code and paste it there.</p>
+   <div class="row"><button class="btn sm ghost" id="acc-copy">Copy access code</button></div>`:`<p class="hint">Bought a pass on another device? Paste your access code to bring it here.</p>`;
+  const c=$("#acc-copy");if(c)c.onclick=()=>navigator.clipboard?.writeText(t.join(" ")).then(()=>toast("Access code copied")).catch(()=>toast(t.join(" ")))}
+function meter(){const q=quota[tier],left=q.cap-q.used,inf=left===Infinity;$("#m-label").textContent=q.label;
+  $$("[data-count]").forEach(e=>e.textContent=inf?"∞":left);$$("[data-fill]").forEach(e=>e.style.width=(inf?100:q.cap?100*left/q.cap:0)+"%")}
+function press(a,b,on){a.setAttribute("aria-pressed",on);b.setAttribute("aria-pressed",!on)}
+function setTier(t){tier=t;press($("#t-std"),$("#t-adv"),t==="standard");press($("#w-std"),$("#w-adv"),t==="standard");meter()}
+$("#t-std").onclick=$("#w-std").onclick=()=>setTier("standard");
+$("#t-adv").onclick=$("#w-adv").onclick=()=>{setTier("advanced");toast("Advanced uses the deeper model")};
+meter();
+const b64=blob=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(String(f.result).split(",")[1]||"");f.onerror=()=>r("");f.readAsDataURL(blob)});
+const AI={
+  async limits(){return {images:{maxCount:4}}},
+  async json(prompt,opts={}){const images=opts.images?await Promise.all(opts.images.map(b64)):[];
+    let r;try{r=await fetch("/api/ai",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({prompt,images,tier:opts.modelTier==="complex"?"advanced":"standard",tokens:tokens()})})}
+    catch(e){throw {code:"network",message:"You seem to be offline."}}
+    const d=await r.json().catch(()=>({}));
+    if(!r.ok){if(d.code==="no_credits"){go("plans");toast(d.error)}throw {code:d.code||"error",message:d.error||"Something went wrong."}}
+    return d.json}};
+function sampler(){return Promise.resolve(AI)}
+
+/* ---------- studio ---------- */
+$("#s-jd").value=`Head of School (sample brief)
+Independent day school, 850 students aged 3–18.
+
+Key responsibilities
+1. Strategic leadership: set and deliver a five-year plan with the governing body
+2. Teaching and learning: raise attainment and progress across all phases
+3. Pastoral care and safeguarding: a culture where every child is known
+4. People and culture: recruit, develop and retain outstanding staff
+5. Community and admissions: strengthen the school's reputation and grow the roll
+6. Financial stewardship: plan sustainably and invest in facilities`;
+$("#s-letter").value=`Dear Chair of Governors,
+
+I am writing to apply for the position of Head of School. I am a passionate and experienced leader with a proven track record of driving improvement, and I believe I would be an excellent fit for your school.
+
+In my current role I have introduced a new curriculum model, led our inspection preparation and improved staff retention. I have also overseen a building project and worked closely with parents.
+
+I care deeply about student wellbeing and I believe every child should be known.
+
+I would welcome the opportunity to discuss my application further.`;
+$("#s-bank").value=store.get("bank3",`Deputy Head (Academic); previously Head of Science
+GCSE progress score up from +0.1 to +0.4 in three years
+Staff turnover down from 18% to 9%
+Led a £2m science centre project, on time and on budget
+Inspection judged leadership and management "excellent"`);
+$("#s-bank").addEventListener("change",e=>store.set("bank3",e.target.value));
+
+const DEMO={priorities:[
+ {heading:"Strategic leadership",what_they_mean:"A five-year plan you can co-own with governors, not one you arrive with."},
+ {heading:"Teaching and learning",what_they_mean:"Evidence that progress rises across every phase, not just your own."},
+ {heading:"Pastoral care and safeguarding",what_they_mean:"Systems that make 'every child known' measurable."},
+ {heading:"People and culture",what_they_mean:"Retention and growth of staff, including leaders you have developed."},
+ {heading:"Community and admissions",what_they_mean:"Reputation and roll growth you can point to."},
+ {heading:"Financial stewardship",what_they_mean:"Sound planning and capital projects delivered well."}],
+ mapping:[
+ {priority:"Strategic leadership",evidence:"No plan or governor-facing example in the letter.",strength:"missing"},
+ {priority:"Teaching and learning",evidence:"Curriculum model mentioned; the progress gain from +0.1 to +0.4 is not used.",strength:"partial"},
+ {priority:"Pastoral care and safeguarding",evidence:"Stated value only; no system or outcome.",strength:"missing"},
+ {priority:"People and culture",evidence:"'Improved staff retention' needs the 18% to 9% figure.",strength:"partial"},
+ {priority:"Community and admissions",evidence:"Parent work mentioned but not evidenced.",strength:"partial"},
+ {priority:"Financial stewardship",evidence:"The £2m science centre, on time and on budget, is the proof and is missing.",strength:"partial"}],
+ verdict:"A capable candidate hidden behind a generic letter. Nothing in the opening is specific to this school, and the strongest evidence (progress up from +0.1 to +0.4, staff turnover halved, a £2m project delivered on budget) sits in the evidence bank rather than on the page. Rebuilt on the brief's six headings with one measured outcome under each, this moves from 'hold' to 'shortlist'.",
+ fixes:["Open with something only this school has, drawn from its own website and brief.","Rebuild the body on the brief's six headings, in its order.","Replace 'proven track record' with the progress and retention figures.","Use the science centre under Financial stewardship.","Give one safeguarding system and what it changed.","Close on one idea about how you lead, not a request for interview."],
+ opening:"A school of 850 children, from nursery to sixth form, asks its Head to hold a clear direction while knowing every child by name. That is the leadership I have practised as Deputy Head (Academic), where progress rose from +0.1 to +0.4 in three years and staff turnover halved, because good teachers chose to stay.",
+ closing_anchor:"Close on leadership as structure the community does not notice but relies on: a framework that holds weight so others can do their best work."};
+const DEMO_Q=["Your Board wants a five-year strategy in your first year. What would you not change?","Tell us about a staff decision you got wrong and what you did next.","How would you grow the roll without discounting fees?","Walk us through how a safeguarding concern reaches you, and what you check.","Why is now the right time for you to move into headship?"];
+
+function render(d,isDemo){const strength={strong:"s-strong",partial:"s-partial",missing:"s-missing"};
+  $("#out").innerHTML=`${isDemo?`<span class="sample-flag">Example read · run your own above</span>`:""}
+  <div class="card"><h3>The sixty-second read <span class="eyebrow">${tier==="advanced"?"Advanced":"Standard"}</span></h3><p class="verdict">${esc(d.verdict)}</p></div>
+  <div class="card"><h3>Evidence map</h3><div class="legend"><span><i class="s-strong"></i>Strong</span><span><i class="s-partial"></i>Partial</span><span><i class="s-missing"></i>Missing</span></div>
+    <div class="map">${(d.mapping||[]).map(m=>`<div class="maprow"><i class="${strength[m.strength]||"s-partial"}"></i><div><b>${esc(m.priority)}</b><span>${esc(m.evidence)}</span></div></div>`).join("")}</div></div>
+  <div class="card"><h3>Fix next</h3><ol class="fixes">${(d.fixes||[]).map(f=>`<li>${esc(f)}</li>`).join("")}</ol></div>
+  <div class="card"><h3>Redrafted opening <button class="btn sm ghost" id="cp-open">Copy</button></h3><p class="prose" id="open-text">${esc(d.opening)}</p></div>
+  <div class="card"><h3>What the brief really asks</h3><div class="map">${(d.priorities||[]).map(p=>`<div class="maprow"><i class="s-ink"></i><div><b>${esc(p.heading)}</b><span>${esc(p.what_they_mean)}</span></div></div>`).join("")}</div></div>
+  <div class="card"><h3>Closing anchor</h3><p class="prose">${esc(d.closing_anchor)}</p></div>
+  <div class="card ${d.panel_questions?"":"locked"}"><h3>Panel simulation <span class="eyebrow">Advanced</span></h3>
+    ${d.panel_questions?`<ol class="fixes">${d.panel_questions.map(q=>`<li>${esc(q)}</li>`).join("")}</ol><button class="btn sm teal" id="rehearse">Rehearse these in Workshop</button>`:`<p class="hint">Switch to Advanced for the five questions this panel is most likely to ask, then rehearse them in Workshop.</p>`}</div>`;
+  const rh=$("#rehearse");if(rh)rh.onclick=()=>{const qs=d.panel_questions.map(x=>({q:String(x).split(/\s+[—–-]\s+Strong answer/i)[0],t:"From your brief",r:"target",g:"Studio"}));
+    $("#w-ctx").value=$("#s-jd").value.split("\n").slice(0,2).join(" ");go("workshop");startSession({label:"Panel from your brief",qs})};
+  const cp=$("#cp-open");if(cp)cp.onclick=()=>navigator.clipboard?.writeText($("#open-text").textContent).then(()=>toast("Opening copied")).catch(()=>toast("Select the text to copy it"));
+}
+render(DEMO,true);
+
+$("#run").onclick=async()=>{
+  const q=quota[tier];if(q.used>=q.cap){go("plans");toast(tier==="advanced"?"Out of Advanced credits. Top up below.":"Your 10 free AI uses are spent. A Search Pass gives you unlimited.");return}
+  const jd=$("#s-jd").value.trim(),letter=$("#s-letter").value.trim(),bank=$("#s-bank").value.trim();
+  if(!jd||!letter){$("#status").textContent="Add the job brief and your letter first.";return}
+  const sample=await sampler();
+  if(!sample){$("#status").textContent="Live AI isn't available in this view, so the example read is shown.";render(tier==="advanced"?{...DEMO,panel_questions:DEMO_Q}:DEMO,true);return}
+  const adv=tier==="advanced";
+  const prompt=`You are a senior partner in the schools practice of an international executive search firm. Today you are retained by the CANDIDATE, not the school, and your job is to tell them honestly how their application will read at shortlisting.
+
+Apply these principles: the opening must be specific to this school; the letter should follow the brief's own headings; every claim needs evidence and a measured impact; keep the candidate's distinctive thread; weight the message to the governance model (not-for-profit = stewardship, group = growth and discipline); close on a conceptual idea, not a summary; generalise pastoral or safeguarding data to cohort trends; two pages; British English; address the right person. Use the evidence bank to show what the letter is failing to use. Never invent facts about the candidate.
+
+Return JSON only, with keys:
+"priorities": array (max 7) of {"heading","what_they_mean"} using the brief's own headings;
+"mapping": array of {"priority","evidence","strength"} where strength is "strong","partial" or "missing";
+"verdict": 60-90 words, the sixty-second shortlisting read, direct and specific;
+"fixes": array of up to 6 specific edits, most important first;
+"opening": a redrafted opening paragraph, max 120 words, in the candidate's own voice, specific to this school, using only facts from the letter or evidence bank;
+"closing_anchor": one or two sentences suggesting a conceptual closing idea${adv?`;
+"panel_questions": array of 5 strings, the hardest questions this panel is likely to ask, each followed by " — Strong answer: " and what it must contain`:""}.
+
+JOB BRIEF:
+${jd}
+
+CANDIDATE LETTER:
+${letter}
+
+EVIDENCE BANK:
+${bank||"(none)"}`;
+  $("#run").disabled=true;$("#status").textContent=adv?"Reading with the advanced model…":"Reading your application…";
+  try{const d=await sample.json(prompt,{modelTier:adv?"complex":"default",cache:false});q.used++;meter();render(d,false);$("#status").textContent="Done. Edit and run again to compare.";
+    if(!isDesk())$("#out").scrollIntoView({behavior:"smooth",block:"start"})}
+  catch(e){$("#status").textContent=e&&e.message?e.message:"That read didn't complete. Your text is still here; run it again.";}
+  finally{$("#run").disabled=false}};
+
+/* ---------- workshop ---------- */
+const QB=[{"r":"Director of Co-Curricular","l":"Senior leadership","g":"Gulf","s":0,"c":"Personal","a":"Personal","t":"Family & move","q":"Talk to me a little about your family: who would be moving with you, and how old are the children?"},{"r":"Director of Co-Curricular","l":"Senior leadership","g":"Gulf","s":0,"c":"Professional","a":"Co-curricular","t":"Co-curricular","q":"If you could define for me what an outstanding co-curricular program looks like within this actual context. How you would build this up, how you would build that culture up in a relatively new school that still has got a culture to evolve with?"},{"r":"Director of Co-Curricular","l":"Senior leadership","g":"Gulf","s":0,"c":"Professional","a":"K-12","t":"K-12","q":"Everyone expects everything to be up and running within the first week. Yeah, you know and The impossible, but these are opportunities as well as challenges. So how do you think you might get in touch with what's going to be suitable for that, you know, the lower end of the school, they're your foundation for the future?"},{"r":"Director of Co-Curricular","l":"Senior leadership","g":"Gulf","s":0,"c":"Professional","a":"Education","t":"Evidence","q":"And how would you know then that all of this had been successful?"},{"r":"Director of Co-Curricular","l":"Senior leadership","g":"Gulf","s":0,"c":"Professional","a":"Leadership","t":"Development","q":"What would you see as your developmental areas as a leader? What are the kind of things you'd like more exposure to?"},{"r":"Director of Co-Curricular","l":"Senior leadership","g":"Gulf","s":0,"c":"Professional","a":"Leadership","t":"Development","q":"If there were other things you could get involved in potentially down the line, what might develop?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Motivation","t":"Motivation","q":"So what's your primary motivation for applying for this role?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Leadership","t":"Culture","q":"My first question was understanding a management of schools culture is a key part of leadership. What's your understanding of the school's unique culture from your research so far?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Leadership","t":"Collaboration","q":"As a leader, how have you created an environment that encourages staff collaboration, creativity in teaching and learning and feelings of empowerment within your school?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Leadership","t":"Recruitment","q":"What do you think sets you apart in the important task of recruiting and retaining high quality staff? And what do you look for in potential new hires to your team?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Leadership","t":"Collaboration","q":"How have you worked with leaders in key non-academic areas such as finance, facilities, human resources, admissions and communication to ensure these areas of the school are operating at a high level?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Leadership","t":"Character","q":"How would your colleagues describe you in five words?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Education","t":"Philosophy","q":"But how would you describe your educational philosophy? And to what extent do you feel it aligns with that of the School?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Education","t":"Change","q":"Could you provide us with an example of an occasion where you have been instrumental in curriculum change and innovation?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Management","t":"Finance","q":"How have you been involved in the financial planning of your school and in your opinion what does it take to do this successfully?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Management","t":"Marketing","q":"Could you tell us more about in, you know, development of marketing and communication strategy for the school?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Education","t":"Evidence","q":"When it comes to the academic program and how do you measure success at your current school?"},{"r":"Principal","l":"Headship","g":"Europe","s":1,"c":"Professional","a":"Leadership","t":"Reflection","q":"What has proven to be your biggest error in judgment in your leadership and what did you learn from this?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Leadership","t":"Coaching","q":"Is there a role for coaching across all teaching staff?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Leadership","t":"Leadership","q":"How you would use regular Head of Faculty Meetings as a tool to deliver your vision?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Leadership","t":"Scenarios","q":"Complaints have been received about a member of staff making culturally insensitive comments. How would you address this?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Education","t":"Teaching qualities","q":"What qualities do you most look for in a teacher?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Education","t":"Wellbeing","q":"Having a culture where effort and resilience is appreciated is key to maintaining these results but, I guess, the big question is how do we marry this with a strong focus on well-being?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Education","t":"Preparedness","q":"How do we know that we've prepared students to develop resilience and the soft skills and the confidence that they're going to need when they go off to university?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Leadership","t":"Style","q":"What is your preferred leadership style and can you give an example of when you've used this style to lead effective change?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Leadership","t":"Style","q":"How do you make yourself a visible leader and approachable to all stakeholders?"},{"r":"Deputy Head Academic","l":"Deputy","g":"Southeast Asia","s":2,"c":"Professional","a":"Leadership","t":"Scenarios","q":"Imagine you're in role and you become aware that a head of faculty has been blaming the senior leadership team for introducing an initiative that has caused unrest among staff, even though it was agreed upon in the heads of faculty meeting that you lead. How do you approach your next meeting with this head of faculty in three days' time?"},{"r":"VP","l":"Deputy","g":"Southeast Asia","s":3,"c":"Professional","a":"Leadership","t":"Leadership","q":"How do you ensure the curriculum serves all learners?"},{"r":"VP","l":"Deputy","g":"Southeast Asia","s":3,"c":"Professional","a":"General","t":"General","q":"How would you deal with a parent who is angry about predicted grades?"},{"r":"VP","l":"Deputy","g":"Southeast Asia","s":3,"c":"Professional","a":"General","t":"General","q":"How do you go about balancing operational and strategic demands?"},{"r":"VP","l":"Deputy","g":"Southeast Asia","s":3,"c":"Professional","a":"General","t":"General","q":"How would you go about supporting a colleague with AfL?"},{"r":"VP","l":"Deputy","g":"Southeast Asia","s":3,"c":"Professional","a":"General","t":"General","q":"Can you share some of examples of how you have supported colleagues develop CPD?"},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Leadership","t":"Values","q":"How would you describe your set of values in terms of your leadership?"},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Leadership","t":"Values","q":"Was there a time when your values were challenged, for example by a project or decision you weren't comfortable with, and you had to consider your options in moving forward?"},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Leadership","t":"Collaboration","q":"Give an example of a project or new initiative you've led that needed collaboration and strong communication, and the success of its rollout."},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Leadership","t":"Reflection","q":"Is there an example where it didn't work, and what did you learn from that process?"},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Leadership","t":"Style","q":"How would you describe your leadership style when working with staff, parents and students?"},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Education","t":"CPD","q":"Talk us through a professional learning programme you've pioneered with colleagues. How did it make an impact?"},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Education","t":"Technology","q":"Give an example of how you've led technological change. What are your thoughts on the opportunities AI offers going forward?"},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Safeguarding","t":"Safeguarding","q":"Give an example of a challenging safeguarding situation and how you followed it through."},{"r":"Deputy Head of College","l":"Deputy","g":"Southeast Asia","s":4,"c":"Professional","a":"Motivation","t":"Motivation","q":"Talk us through your motivation for applying for this role, given your current context."},{"r":"Second Master","l":"Deputy","g":"Southeast Asia","s":5,"c":"Professional","a":"Motivation","t":"Motivation","q":"Why this school, and why this Second Master role, at this point in time?"},{"r":"Second Master","l":"Deputy","g":"Southeast Asia","s":5,"c":"Professional","a":"Leadership","t":"Change","q":"Talk me through a few examples, from any point in your career, of your contribution to whole-school strategic leadership, operational management and co-curricular development. What did you inherit and what has changed since?"},{"r":"Second Master","l":"Deputy","g":"Southeast Asia","s":5,"c":"Professional","a":"Management","t":"Operations","q":"Have you worked on the school calendar and its organisation as well?"},{"r":"Second Master","l":"Deputy","g":"Southeast Asia","s":5,"c":"Professional","a":"Leadership","t":"Line management","q":"Who do you line manage, and what is your relationship with other members of the senior leadership team and with your Head?"},{"r":"Second Master","l":"Deputy","g":"Southeast Asia","s":5,"c":"Professional","a":"Leadership","t":"Character","q":"How do you think they would describe you? What sort of person and what sort of leader?"},{"r":"Second Master","l":"Deputy","g":"Southeast Asia","s":5,"c":"Professional","a":"Leadership","t":"Context","q":"How would you translate your current experience into a different context such as ours?"},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Professional","a":"Motivation","t":"Motivation","q":"Why this role, and why now is the right time?"},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Personal","a":"Personal","t":"Family & move","q":"How old are your children?"},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Personal","a":"Personal","t":"Family & move","q":"From your family's perspective, what would they make of a move back to your home country?"},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Professional","a":"Leadership","t":"Change","q":"Tell us about your current role and the change of role since joining: what you found when you arrived, and your highlights."},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Professional","a":"Education","t":"Teaching and learning","q":"Tell us more about the teaching and learning framework: how you developed and implemented it within the constraints of the wider system, and secured quality alongside it."},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Professional","a":"Leadership","t":"Career","q":"Tell us about your previous roles: the path you took, the responsibilities you gained and particular highlights."},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Professional","a":"Management","t":"Finance","q":"Financial sustainability is a pressing theme across our network of schools. What role has financial management played across your positions, and what has the focus been?"},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Professional","a":"Management","t":"Fundraising","q":"Do you have much insight into the other main sources of income beyond fee income?"},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Professional","a":"Education","t":"Service","q":"Tell us about your work with an external education partner: the relationship, what you've done and how it came about."},{"r":"Principal","l":"Headship","g":"Europe","s":6,"c":"Professional","a":"Leadership","t":"Style","q":"Tell us about your style as a leader and how you build relationships with your team and the wider residential community."},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Motivation","t":"Motivation","q":"What are your motivations behind the application? Why this role, and why now?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Leadership","t":"Career","q":"Give us a brief overview of your career history, from your first international post to your current role."},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Leadership","t":"Change","q":"How has the transition into your new senior role gone?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Leadership","t":"Line management","q":"Who do you line manage in your current role?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Leadership","t":"Style","q":"How have you adapted your leadership approach to the different contexts you've worked in, and how would colleagues describe your leadership style?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Leadership","t":"Parents","q":"How do you engage and build the trust of external stakeholders, particularly parents? Are there specific examples or initiatives you've led?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Education","t":"Personalisation","q":"The school is looking to develop individual learning pathways. How would your curriculum experience help, and when have you had to be innovative in curriculum development?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Education","t":"Personalisation","q":"In your current context, how do you ensure students get a bespoke experience of the school?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Leadership","t":"Strategy","q":"Give examples of where you've been involved in setting strategic direction and objectives. How would you work collaboratively with the Secondary Campus Principal?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Professional","a":"Leadership","t":"Context","q":"How concerned are you about the leadership change at the school? We'd appreciate your frank view."},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Personal","a":"Personal","t":"Family & move","q":"Who would be moving with you, and does your partner work in schools?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Personal","a":"Personal","t":"Family & move","q":"How would the move feel from a family perspective?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Personal","a":"Personal","t":"Package","q":"What is your notice period? Is there anything about salary or the wider package we should be mindful of? Are you involved in other processes?"},{"r":"Head of Upper School","l":"Senior leadership","g":"Southeast Asia","s":7,"c":"Personal","a":"Personal","t":"Logistics","q":"Do the interview dates pose any concerns?"},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Professional","a":"Motivation","t":"Motivation","q":"Tell us about where you are at the moment and why this role appeals to you."},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Professional","a":"Leadership","t":"Career","q":"Talk me through your career history."},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Professional","a":"Leadership","t":"Career","q":"How is your current school structured, and how did your move into the new role come about?"},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Professional","a":"Leadership","t":"Achievement","q":"Looking across your experience, which achievement are you most proud of that aligns with this brief?"},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Professional","a":"Leadership","t":"Strategy","q":"Give an example of developing or supporting a strategic initiative and vision for the wider school."},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Professional","a":"Education","t":"Wellbeing","q":"Wellbeing is a particular area of development here (an audit, and a ten-year wellbeing strategy about to be released). Tell us about your experience of working in a school with a real focus on wellbeing."},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Professional","a":"Education","t":"Wellbeing","q":"Is there a particular achievement in wellbeing you would highlight?"},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Professional","a":"Leadership","t":"Style","q":"How would you describe your approach to leading staff? What does your team look like, and how would they describe your approach?"},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Personal","a":"Personal","t":"Family & move","q":"What might a move to this country look like for you, and who would be coming with you?"},{"r":"Secondary Principal","l":"Senior leadership","g":"Southeast Asia","s":8,"c":"Personal","a":"Personal","t":"Package","q":"Are you looking at any other opportunities? Anything to raise on package?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Motivation","t":"Motivation","q":"What's driving you back to international education?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Personal","a":"Personal","t":"Family & move","q":"How old are your children now? Is your partner a teacher as well?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Motivation","t":"Role","q":"What's your perception of the post we're looking for?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Education","t":"Library","q":"What's your future vision of a library?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Education","t":"Technology","q":"How should schools be shaping up for the future of AI, and what should they be thinking about now?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Co-curricular","t":"Sport","q":"The bread and butter of this role is overseeing ECAs: academy structures in swimming, tennis and gym, with full weekend schedules of tournaments. Speak to your experience of overseeing those types of programmes."},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Co-curricular","t":"Sport","q":"You'd have an assistant principal and a whole coaching structure. How would you ensure it was all working as it should?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Education","t":"CPD","q":"Talk to me about your experience of leading whole-school staff development."},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Education","t":"Evidence","q":"Tell me about your value-added strategy and the plan you put together."},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Education","t":"Evidence","q":"Synthesising across the piece, what were the headlines of what needed to be done where there was negative value added?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Management","t":"Finance","q":"Tell me where you've demonstrated business acumen in your roles."},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Leadership","t":"Line management","q":"Who are your direct reports, and how do you bring them together as a team?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Leadership","t":"Development","q":"What would colleagues say are your absolute strengths, and what do you need to develop further as a leader?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Professional","a":"Leadership","t":"Collaboration","q":"What do you do to make sure you get the most effective collaboration?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Personal","a":"Personal","t":"Package","q":"What's your current salary, and do you get any other benefits?"},{"r":"Cross-Campus Principal","l":"Senior leadership","g":"Southeast Asia","s":9,"c":"Personal","a":"Personal","t":"Logistics","q":"Have you got any other applications in at the moment? How flexible is your resignation deadline, and could you start in January?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Leadership","t":"Career","q":"Tell us a little about your experiences so far, including your time in international schools."},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Motivation","t":"Motivation","q":"Why this school, at this time?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"Curriculum","q":"What is essential for every student to experience from Year 7 to Year 13? What do they need to know, be able to do and understand to be ready for the next stage of life?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"Teaching qualities","q":"How does that look day to day? If you walked round the school, what would you look for in any lesson?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"Service","q":"How do you ensure every student experiences service learning, so it isn't a bolt-on for those who opt in?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"Teaching qualities","q":"How would you articulate high-quality teaching and learning? What are the pillars you judge yourselves by?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"Consistency","q":"How have you ensured a consistent approach to teaching and learning?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"Evidence","q":"On a scale of 1 to 10, where are your teachers now against those standards, and where were they two years ago?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Leadership","t":"Change","q":"What have you explicitly done as academic lead to move from a five to a seven?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"CPD","q":"What are your base expectations of staff for their professional growth? Are there specific targets?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Leadership","t":"Reflection","q":"What have been the biggest challenges?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Leadership","t":"Scenarios","q":"How have you approached a resistant department, and what do you think the real problem is?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"Coaching","q":"How much peer support and self-evaluation is there from middle leaders, and how open is the culture between colleagues?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Leadership","t":"Character","q":"How would the people you work most directly with describe you as a leader?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Leadership","t":"Style","q":"Are you more the executor who gets it done, or the visionary?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Education","t":"Philosophy","q":"From a teaching and learning perspective, what would you take from your previous schools into this role?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Professional","a":"Leadership","t":"Development","q":"What would you personally like to get from this role?"},{"r":"Deputy Head of Secondary","l":"Deputy","g":"Southeast Asia","s":10,"c":"Personal","a":"Personal","t":"Logistics","q":"Are you in any other processes, and what is the timeline?"}];
+const NINT=new Set(QB.map(q=>q.s)).size;
+(function(){const th={};QB.filter(q=>q.c==="Professional").forEach(q=>{(th[q.t]=th[q.t]||new Set()).add(q.s)});
+  const top=Object.entries(th).map(([k,v])=>[k,v.size]).sort((a,b)=>b[1]-a[1]).slice(0,7);
+  $("#w-insight").innerHTML=top.map(([k,n])=>`<div class="lrow"><span>${esc(k)}</span><div class="t"><div style="width:${100*n/NINT}%"></div></div><span class="v">${Math.round(100*n/NINT)}%</span></div>`).join("")})();
+
+const EXT=[
+["Motivation","Middle","Why do you want to lead a department rather than stay in the classroom full time?"],
+["Teaching qualities","Middle","What would we see in every lesson in your department within a year?"],
+["Evidence","Middle","Talk us through your department's results. What do you know about the students who underperformed?"],
+["Curriculum","Middle","How would you review and rewrite a key stage curriculum, and how would you bring the team with you?"],
+["Consistency","Middle","How do you make sure marking and feedback are consistent across the department?"],
+["People","Middle","A colleague in your team is struggling and their classes are falling behind. What do you do?"],
+["People","Middle","How would you lead a team that includes people older and more experienced than you?"],
+["Development","Middle","How do you develop the teachers in your department, including the strongest ones?"],
+["Scenarios","Middle","A parent complains that their child's predicted grade is unfair. How do you handle it?"],
+["Strategy","Middle","How would your department contribute to the school's wider priorities?"],
+["Coaching","Middle","How do you run a lesson observation that actually changes practice?"],
+["Wellbeing","Middle","How do you manage workload in your team during exam season?"],
+["Motivation","Any","What would you want this school to be known for five years after you arrive?"],
+["Motivation","Any","What will you miss most about your current role, and what does that tell you about the role you want next?"],
+["Motivation","Any","What kind of school would not suit you, and why?"],
+["Strategy","Headship","If the Board asked for three strategic priorities by the end of your first term, how would you arrive at them?"],
+["Strategy","Any","Which part of a school's strategy would you challenge early, and how would you raise it without losing goodwill?"],
+["Strategy","Any","How do you decide what not to do as a leader?"],
+["Governance","Headship","Tell us about a time you disagreed with a governor or your Board. How did you handle it?"],
+["Governance","Headship","What does a good working relationship between a Head and a Chair look like week to week?"],
+["Governance","Headship","How would you report on school performance to a Board with few educators on it?"],
+["Finance","Headship","Talk us through a budget decision where you had to choose between two good things."],
+["Finance","Headship","How would you approach fee setting in a market where families have strong alternatives?"],
+["Finance","Any","Where would you look for income beyond fees, and what are the risks?"],
+["Admissions","Any","Enrolment has dipped two years running. What do you do in your first month?"],
+["Admissions","Any","How do you make sure what the school promises families matches what they experience?"],
+["Teaching qualities","Any","What does great teaching look like in a lesson you might walk into tomorrow morning?"],
+["Evidence","Any","How do you know a teaching and learning initiative has changed practice rather than paperwork?"],
+["Change","Any","How would you raise standards in a department that believes it is already good?"],
+["Evidence","Any","Which data do you look at every week, and what decisions has it changed?"],
+["Evidence","Any","Tell us about a time the data told you something you didn't want to hear."],
+["Curriculum","Any","How would you decide whether to add a new pathway or qualification?"],
+["Curriculum","Any","What should every student leave this school able to do that no exam measures?"],
+["Wellbeing","Any","Student survey data shows rising anxiety in one year group. What do you do?"],
+["Safeguarding","Any","How do you build a culture where staff raise low-level concerns early?"],
+["Safeguarding","Headship","Walk us through how you would respond to an allegation against a senior colleague."],
+["Safeguarding","Any","How do you assure yourself that safeguarding is working, beyond compliance?"],
+["Recruitment","Any","What do you look for in the first ten minutes of interviewing a teacher?"],
+["Recruitment","Any","How have you kept strong staff when other schools could pay more?"],
+["People","Any","Tell us about a difficult conversation with an underperforming colleague, and the outcome."],
+["Development","Any","How are you developing the next generation of leaders in your team?"],
+["Change","Any","Describe a change you led that met real resistance. What did you learn about the people involved?"],
+["Culture","Any","How would you get to know the culture of a school before changing anything?"],
+["Culture","Headship","What would you protect here, even under pressure to change it?"],
+["Inclusion","Any","How do you make every family feel they belong in a very international community?"],
+["Inclusion","Any","Give an example of how you widened access to an opportunity in your school."],
+["Parents","Any","A group of parents is campaigning against a decision you have made. What do you do?"],
+["Parents","Any","How do you build relationships with the local community beyond the school gate?"],
+["Technology","Any","What is your school's position on AI in assessment, and how did you reach it?"],
+["Technology","Any","How would you support staff who feel anxious about AI?"],
+["Scenarios","Any","A serious incident is spreading on social media before you have briefed staff. What are your first three steps?"],
+["Scenarios","Any","Two senior colleagues have fallen out and it is affecting their teams. How do you handle it?"],
+["Scenarios","Any","A high-profile family asks for an exception to a policy. How do you respond?"],
+["Scenarios","Any","A staff member's post online has caused offence in the host community. What do you do?"],
+["Scenarios","Any","Results drop sharply in one subject. What do you say to staff, students and parents?"],
+["Reflection","Any","Tell us about a decision you would make differently now."],
+["Reflection","Any","What feedback have you received that changed how you lead?"],
+["Style","Any","When are you at your best as a leader, and when are you not?"],
+["Style","Any","How do you sustain yourself in a demanding role, and what would we notice if you were stretched?"],
+["Character","Any","What would your student council say about you?"],
+["Boarding","Senior","What makes a boarding house feel like a home rather than a hall of residence?"],
+["Boarding","Deputy","How do you make sure evenings and weekends are as well led as the school day?"],
+["Co-curricular","Any","How do you make sure co-curricular opportunity isn't decided by a family's means?"],
+["Service","Any","How do you make service learning genuinely reciprocal with partners?"],
+["Sustainability","Any","What has your school actually done about sustainability, and how did you measure it?"],
+["Operations","Any","How do you stay visible around school while carrying the operational load of the role?"],
+["Operations","Headship","Tell us how you worked with a Bursar or COO to deliver a major project."],
+["Context","Any","How would you lead respectfully within the culture and regulations of a host country?"],
+["Context","Any","What has moving between education systems taught you about leadership?"],
+["Line management","Deputy","How do you make your Head's vision real for staff day to day?"],
+["Line management","Deputy","How do you disagree with your Head in private and support them in public?"],
+["Operations","Deputy","How do you manage the timetable, cover and calendar so that teaching time is protected?"],
+["Collaboration","Senior","How would you work with leaders of other phases to make transition seamless?"],
+["Personalisation","Senior","How do you make sure every student is known individually in a large section?"],
+["Strategy","Headship","What would you do in the year before a new school opens?"],
+["Career","Any","What have you learned from the leaders you have worked for, good and bad?"],
+["Career","Any","If you are offered two roles at the same time, how will you choose?"]
+];
+
+const LV={Any:null,Headship:"Headship",Deputy:"Deputy",Senior:"Senior leadership",Middle:"Middle"};
+const POOL=[...QB.filter(q=>q.c==="Professional"||q.t==="Logistics"),...EXT.map(([t,l,q])=>({q,t,l:LV[l],c:"Professional",ext:true}))];
+const ME_DEF="Deputy Head (Academic) at an independent day school; previously Head of Science; progress up from +0.1 to +0.4; staff turnover halved.";
+$("#w-me").value=store.get("me2",ME_DEF);$("#w-me").addEventListener("change",e=>store.set("me2",e.target.value));
+const PANELS={
+ head:{label:"Headship final panel",sub:"Vision, governance, finance, judgement",lv:["Headship","Senior leadership"],pick:[["Motivation"],["Strategy","Culture"],["Governance"],["Finance","Admissions"],["Change","Evidence"],["Safeguarding","Scenarios"],["Reflection","Style"],["Recruitment","People","Development"]]},
+ senior:{label:"Section head / Principal",sub:"Standards, wellbeing, teams",lv:["Senior leadership","Headship"],pick:[["Motivation"],["Style","Character"],["Evidence","Teaching qualities","Consistency"],["Wellbeing","Personalisation","Inclusion"],["Strategy","Change"],["Parents","Collaboration"],["Reflection","Development"],["Safeguarding","Scenarios"]]},
+ middle:{label:"Head of Department / Faculty",sub:"Curriculum, results, your team",lv:["Middle"],pick:[["Motivation"],["Teaching qualities","Consistency"],["Evidence"],["Curriculum"],["People"],["Development","Coaching"],["Scenarios"],["Strategy","Wellbeing"]]},
+ deputy:{label:"Deputy head",sub:"Teaching, CPD, operations",lv:["Deputy"],pick:[["Motivation"],["Values","Style"],["Teaching qualities","Consistency","Evidence"],["CPD","Coaching","Development"],["Scenarios"],["Line management","Operations"],["Reflection"],["Change","Culture"]]},
+ screen:{label:"Search consultant screen",sub:"Motivation, career, fit",lv:null,pick:[["Motivation"],["Career"],["Character","Style"],["Achievement","Change"],["Context"],["Development","Reflection"],["Strategy"],["Logistics"]]},
+ scen:{label:"Scenarios and judgement",sub:"Hard calls under pressure",lv:null,pick:[["Scenarios"],["Safeguarding"],["Parents"],["Scenarios"],["Values","Reflection"],["People"],["Technology","Context"],["Wellbeing"]]}};
+let W={fmt:"typed",n:5,panel:"head",sess:null,stream:null};
+$("#w-panels").innerHTML=Object.entries(PANELS).map(([k,p])=>`<button type="button" class="pp" data-k="${k}" aria-pressed="${k==="head"}"><span><b>${p.label}</b><small>${p.sub}</small></span><i></i></button>`).join("");
+$("#w-panels").addEventListener("click",e=>{const b=e.target.closest(".pp");if(!b)return;W.panel=b.dataset.k;$$("#w-panels .pp").forEach(x=>x.setAttribute("aria-pressed",x===b))});
+$("#w-typed").onclick=()=>{W.fmt="typed";press($("#w-typed"),$("#w-video"),true)};
+$("#w-video").onclick=()=>{W.fmt="video";press($("#w-video"),$("#w-typed"),true)};
+$("#w-n").addEventListener("click",e=>{const c=e.target.closest("[data-n]");if(!c)return;W.n=+c.dataset.n;$$("#w-n button").forEach(x=>x.setAttribute("aria-pressed",x===c))});
+function compose(key,n){const P=PANELS[key],used=new Set(),qs=[];
+  for(let k=0;k<n;k++){const themes=P.pick[k%P.pick.length];
+    let pool=POOL.map((q,i)=>({q,i})).filter(x=>themes.includes(x.q.t)&&!used.has(x.i));
+    const pref=P.lv?pool.filter(x=>P.lv.includes(x.q.l)):pool;if(pref.length)pool=pref;
+    if(!pool.length)pool=POOL.map((q,i)=>({q,i})).filter(x=>!used.has(x.i)&&x.q.t!=="Logistics");
+    const x=pool[Math.floor(Math.random()*pool.length)];used.add(x.i);qs.push({...x.q})}
+  return qs}
+$("#w-start").onclick=async()=>{const P=PANELS[W.panel],base=compose(W.panel,W.n);
+  const sample=await sampler(),me=$("#w-me").value.trim(),ctx=$("#w-ctx").value.trim();
+  if(!sample||(!me&&!ctx)){startSession({label:P.label,qs:base});return}
+  $("#w-start").disabled=true;$("#w-start").textContent="Tailoring your panel…";
+  const themes=base.map(q=>q.t);
+  const ex=[];P.pick.flat().forEach(t=>{POOL.filter(q=>q.t===t&&q.t!=="Logistics").slice(0,3).forEach(q=>ex.push(q.q))});
+  const prompt=`You are composing the questions for a ${P.label} at an international school. Write ${W.n} questions to put to this candidate.
+
+Candidate: ${me||"(not given)"}
+Role: ${ctx||"(not given)"}
+
+Real questions panels have asked, for style and level only (do not copy them):
+${[...new Set(ex)].slice(0,36).map(x=>"- "+x).join("\n")}
+
+Cover these themes in this order: ${themes.join(", ")}.
+Tailor every question to this candidate and this role: refer to their actual experience, career route or the school's context where it sharpens the question, the way a well-prepared panel would. Probe gaps a sceptical panel would notice (for example, moving up a level, a change of system, or limited experience of governance or finance). No questions about family, children or partners${W.panel==="screen"?"; one brief question on timing or other processes is allowed at the end":""}. Each question under 45 words, spoken as a panel member would say it, British English.
+Return JSON only: {"questions":[{"q":"...","t":"theme"}]}`;
+  try{const d=await sample.json(prompt,{modelTier:"default",cache:false});
+    const qs=(d.questions||[]).filter(x=>x&&x.q).slice(0,W.n).map(x=>({q:x.q,t:x.t||"Panel",tailored:true}));
+    startSession({label:P.label,qs:qs.length?qs:base})}
+  catch(e){startSession({label:P.label,qs:base});toast("Couldn't tailor this time, so the panel uses the question bank")}
+  finally{$("#w-start").disabled=false;$("#w-start").textContent="Start mock interview"}};
+function startSession(o){W.sess={label:o.label,qs:o.qs,i:0,res:[],ctx:$("#w-ctx").value.trim(),fmt:W.fmt};
+  $('[data-view="workshop"]').classList.add("in-session");$("#w-end").hidden=false;go("workshop");ask()}
+function endSession(){stopClock();if(rec)stopRec();if(W.stream){W.stream.getTracks().forEach(t=>t.stop());W.stream=null}
+  $('[data-view="workshop"]').classList.remove("in-session");$("#w-end").hidden=true;W.sess=null;restExample();window.scrollTo(0,0)}
+$("#w-end").onclick=endSession;
+
+let clockT=null,t0=0,rec=null,chunks=[],frames=[],recSecs=0,frameT=null;
+function stopClock(){clearInterval(clockT);clockT=null}
+function fmtT(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function runClock(mode,limit){stopClock();t0=Date.now();
+  clockT=setInterval(()=>{const el=$("#clock");const s=(Date.now()-t0)/1000;if(!el)return;
+    if(mode==="think"){el.textContent="Think "+fmtT(limit-s);if(s>=limit){stopClock();el.textContent="Record now";el.classList.add("over")}}
+    else{el.textContent=fmtT(s);el.classList.toggle("over",s>(limit||150));if(mode==="rec"){recSecs=s;const r=$("#v-time");if(r)r.textContent=fmtT(s)+" / 2:00";if(s>=120)stopRec()}}},250)}
+function qcard(q,s,compact){const real=s.qs.filter(x=>!x.probe).length,pos=s.qs.slice(0,s.i+1).filter(x=>!x.probe).length;
+  return `<div class="qcard"><div class="qmeta"><span class="eyebrow">${q.probe?"Follow-up":`Question ${pos} of ${real}`} · ${esc(q.t)}</span>${compact?"":`<span class="clock" id="clock">0:00</span>`}</div>
+  <div class="progress">${s.qs.map((x,k)=>`<i class="${k<s.i?"done":k===s.i?"now":""}"></i>`).join("")}</div>
+  <p class="qtext">${esc(q.q)}</p><span class="eyebrow">${q.probe?"Probe from the panel":q.tailored?`${esc(s.label)} · tailored to you`:q.r&&q.g!=="Studio"?`${esc(s.label)} · from a real ${esc(q.r)} panel`:esc(s.label)}</span></div>`}
+const wc=t=>(t.trim().match(/\S+/g)||[]).length;
+function ask(){const s=W.sess,q=s.qs[s.i];frames=[];recSecs=0;const typed=s.fmt==="typed";
+  $("#ws-stage").innerHTML=qcard(q,s)+`<div class="card">
+   ${typed?`<div class="field"><label for="w-ans">Your answer</label>
+   <textarea id="w-ans" rows="8" placeholder="Answer as you would speak it. Aim for 150 to 300 words."></textarea></div>`:`<label class="cam" id="cam" for="v-file"><div class="ph" id="cam-ph"><span class="recbig" aria-hidden="true"></span><b style="display:block;font-family:var(--display);font-size:21px;color:#fff;margin:12px 0 4px">Tap to record</b>Opens your front camera. One take, up to two minutes.</div></label>
+   <input type="file" id="v-file" accept="video/*" capture="user" hidden>
+   <span class="hint" id="v-note">Use the thinking time, then tap to record.</span>
+   <details class="more" id="v-more"><summary>Add what you said for sharper feedback (optional)</summary>
+   <div class="field" style="margin-top:10px"><textarea id="w-ans" rows="4" aria-label="What you said" placeholder="Tap the microphone on your keyboard and say your main points again."></textarea></div></details>`}
+   <div class="row"><button class="btn" id="w-fb" style="flex:1">Get feedback</button><button class="btn ghost" id="w-skip">Skip</button></div>
+   <div class="row" style="justify-content:space-between"><span class="status" id="w-status" aria-live="polite"></span><span class="hint" id="w-wc">0 words</span></div></div>`;
+  $("#w-ans").addEventListener("input",()=>{$("#w-wc").textContent=wc($("#w-ans").value)+" words"});
+  $("#w-fb").onclick=feedback;$("#w-skip").onclick=next;
+  if(typed)runClock("up",150);else{setupCam();runClock("think",30)}
+  window.scrollTo({top:0,behavior:"smooth"})}
+function setupCam(){
+  $("#v-file").onchange=e=>{const f=e.target.files&&e.target.files[0];if(f)useFile(f);e.target.value=""};
+  $("#w-fb").disabled=true;$("#w-fb").textContent="Record first"}
+function grab(v){try{const c=document.createElement("canvas");const w=480,h=Math.round(480*(v.videoHeight||9)/(v.videoWidth||16));c.width=w;c.height=h;c.getContext("2d").drawImage(v,0,0,w,h);
+  c.toBlob(b=>{if(b&&frames.length<4)frames.push(b)},"image/jpeg",.72)}catch(e){}}
+function startRec(){if(!W.stream||rec)return;chunks=[];try{rec=new MediaRecorder(W.stream)}catch(e){$("#v-note").textContent="Recording isn't supported in this browser. Upload a recording instead.";return}
+  rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
+  rec.onstop=()=>{const blob=new Blob(chunks,{type:rec.mimeType||"video/webm"});rec=null;const v=$("#live");if(v){v.srcObject=null;v.muted=false;v.controls=true;v.src=URL.createObjectURL(blob)}
+    $("#cam-ovl").hidden=true;$("#v-note").textContent=`Recorded ${fmtT(recSecs)}. Add the transcript, then get feedback.`};
+  rec.start();$("#cam-ovl").hidden=false;$("#v-rec").hidden=true;$("#v-stop").hidden=false;$("#v-note").textContent="Recording. Stop when you've finished.";runClock("rec",120);
+  const live=$("#live");setTimeout(()=>live&&grab(live),3000);frameT=setInterval(()=>live&&grab(live),25000)}
+function stopRec(){stopClock();clearInterval(frameT);if(rec&&rec.state!=="inactive"){const live=$("#live");live&&grab(live);rec.stop()}const s=$("#v-stop");if(s)s.hidden=true}
+function useFile(f){stopClock();frames=[];recSecs=0;
+  const v=document.createElement("video");v.controls=true;v.playsInline=true;v.muted=true;v.preload="auto";v.id="live";v.src=URL.createObjectURL(f);
+  const cam=$("#cam"),box=document.createElement("div");box.className="cam";box.id="cam";box.appendChild(v);cam.replaceWith(box);
+  const n=$("#v-note");n.innerHTML=`Recorded. <label for="v-file" style="color:var(--teal-ink);font-weight:600;cursor:pointer;text-decoration:underline">Record again</label>`;
+  const fb=$("#w-fb");fb.disabled=false;fb.textContent="Get feedback";
+  v.onloadedmetadata=async()=>{recSecs=isFinite(v.duration)?v.duration:0;
+    if(recSecs)n.insertAdjacentHTML("afterbegin",`${fmtT(recSecs)}${recSecs>125?" (over two minutes)":""} · `);
+    try{await v.play();v.pause()}catch(e){}
+    for(const p of [.1,.35,.6,.85]){await new Promise(r=>{v.onseeked=r;try{v.currentTime=(recSecs||1)*p}catch(e){r()}setTimeout(r,1500)});grab(v)}
+    try{v.currentTime=0}catch(e){}v.muted=false}}
+
+const DIMS=[["directness","Directness"],["evidence","Evidence"],["structure","Structure"],["fit","Fit"],["voice","Leader's voice"]];
+const DEMO_FB={scores:{directness:4,evidence:2,structure:3,fit:2,voice:3},headline:"A sincere answer that tells the panel why you want a headship, but not why this school or why now.",
+ worked:["Opens with the motive in the first sentence","Warm and credible about the community"],
+ improve:["Name one thing only this school has and tie your timing to it","Replace 'I have grown admissions' with the figure and the period","End on what you will do in year one, not on what you hope to learn"],
+ stronger:"1. The motive in one line: why headship, why now in your career.\n2. Why this school: [its specific feature] and how it meets your experience.\n3. One proof: [your measured outcome] and what it taught you.\n4. Close forward: the first thing you would do in your first term.",
+ follow_up:"What would make you leave this role within three years?"};
+function fbHTML(d,meta,dims){dims=dims||DIMS;const sc=d.scores||{};
+  const bars=dims.map(([k,l])=>{const v=Math.max(0,Math.min(5,+sc[k]||0));return `<div class="srow"><span>${l}</span><div class="t">${[1,2,3,4,5].map(n=>`<i class="${n<=v?"on"+(v<=2?" lo":""):""}"></i>`).join("")}</div><span class="v">${v}/5</span></div>`}).join("");
+  const del=d.delivery?`<div class="card"><h3>On-camera delivery <span class="eyebrow">Advanced</span></h3>
+     <div class="two"><div><h4>Framing</h4><p class="hint">${esc(d.delivery.framing)}</p><h4 style="margin-top:8px">Eye line</h4><p class="hint">${esc(d.delivery.eye_line)}</p></div>
+     <div><h4>Lighting</h4><p class="hint">${esc(d.delivery.lighting)}</p><h4 style="margin-top:8px">Presence</h4><p class="hint">${esc(d.delivery.presence)}</p></div></div>
+     <div class="probe"><b>Next take</b>${esc(d.delivery.tip)}</div></div>`:(meta.video?`<div class="card locked"><h3>On-camera delivery <span class="eyebrow">Advanced</span></h3><p class="hint">Switch to Advanced to have framing, eye line, lighting and presence read from your recording.</p></div>`:"");
+  return `<div class="card"><h3>Panel verdict <span class="eyebrow">${meta.pace||meta.words+" words"}</span></h3><p class="verdict">${esc(d.headline)}</p><div class="scores">${bars}</div></div>
+  <div class="card two"><div><h4>What worked</h4><ul>${(d.worked||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div><h4>Change next time</h4><ul>${(d.improve||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div></div>
+  <div class="card"><h3>${meta.delivery?"Next take":"A stronger answer"}</h3><p class="prose">${esc(d.stronger)}</p></div>${del}
+  ${d.follow_up?`<div class="probe"><b>${meta.probing?"The panel asks next":"Likely follow-up"}</b>${esc(d.follow_up)}</div>`:""}`}
+async function feedback(){const s=W.sess,q=s.qs[s.i],ans=$("#w-ans").value.trim();
+  const vid=s.fmt==="video";if(vid&&!frames.length&&!recSecs&&wc(ans)<15){$("#w-status").textContent="Record your answer first.";return}
+  if(!vid&&wc(ans)<15){$("#w-status").textContent="Write at least a few sentences first.";return}
+  if(vid&&wc(ans)<15)return deliveryFeedback(s,q);
+  const qq=quota[tier];if(qq.used>=qq.cap){go("plans");toast(tier==="advanced"?"Out of Advanced credits. Top up below.":"Your 10 free AI uses are spent. A Search Pass gives you unlimited.");return}
+  stopClock();if(rec)stopRec();
+  const secs=s.fmt==="video"?recSecs:0,words=wc(ans),wpm=secs>10?Math.round(words/(secs/60)):0;
+  const meta={video:s.fmt==="video",words,pace:wpm?`${fmtT(secs)} · ${wpm} wpm`:"",probing:tier==="advanced"};
+  const sample=await sampler();let d,demo=false;
+  if(!sample){d=DEMO_FB;demo=true}else{
+    const adv=tier==="advanced";let imgs=false;
+    if(adv&&frames.length){try{const lim=await sample.limits();imgs=!!(lim&&lim.images)}catch(e){}}
+    const prompt=`You chair the interview panel for a senior international school leadership appointment, with the retained search partner beside you. Panel: ${s.label}.${s.ctx?" The role: "+s.ctx+".":""}
+Question asked${q.probe?" (a follow-up probe to the candidate's previous answer)":""}: "${q.q}"
+The candidate's answer (${meta.video?"spoken on a one-way video interview, transcribed":"typed as they would speak it"}; ${words} words${secs?`, ${Math.round(secs)} seconds, about ${wpm} words a minute`:""}):
+"""${ans}"""
+
+Judge it the way shortlisters do. Score each 1 to 5: directness (answers the actual question in the first two sentences), evidence (a specific example with a measured outcome), structure (situation, action, result, learning), fit (connects to this school or role), voice (owns decisions with "I" while crediting the team, and sounds like the role being appointed). For personal, family, package or logistics questions, judge clarity, honesty and composure, and still use the five keys.${meta.video?" Comment on pace if it is outside 130 to 160 words a minute.":""}
+Return JSON only: {"scores":{"directness":n,"evidence":n,"structure":n,"fit":n,"voice":n},"headline":"one candid sentence","worked":[up to 2 short strings],"improve":[up to 3 specific, actionable strings],"stronger":"a 3 to 5 line numbered outline of a stronger answer, using only what the candidate said plus placeholders like [your figure]","follow_up":"the probe a sharp panel member would ask next"${imgs?`,"delivery":{"framing":"...","eye_line":"...","lighting":"...","presence":"...","tip":"one change for the next take"}} — judge delivery from the attached frames of the recording`:"}"}
+British English. Be specific and fair. Never invent facts about the candidate.`;
+    $("#w-fb").disabled=true;$("#w-status").textContent="The panel is conferring…";
+    try{d=await sample.json(prompt,{modelTier:adv?"complex":"default",cache:false,...(imgs?{images:frames.slice(0,3)}:{})});qq.used++;meter()}
+    catch(e){$("#w-fb").disabled=false;$("#w-status").textContent=e&&e.message?e.message:"Feedback didn't complete. Your answer is still here; try again.";return}}
+  s.res.push({q,d,words});
+  if(tier==="advanced"&&!q.probe&&d.follow_up&&!demo)s.qs.splice(s.i+1,0,{q:d.follow_up,t:q.t,r:q.r,g:q.g,probe:true});
+  const last=s.i>=s.qs.length-1;
+  $("#ws-stage").innerHTML=(demo?`<span class="sample-flag">Example feedback · live AI isn't available in this view</span>`:"")+qcard(q,s,true)+fbHTML(d,meta)+
+   `<div class="row"><button class="btn teal" id="w-next" style="flex:1">${last?"See session summary":(s.qs[s.i+1].probe?"Answer the follow-up":"Next question")}</button><button class="btn ghost" id="w-retry">Retry</button></div>`;
+  $("#w-next").onclick=next;$("#w-retry").onclick=()=>{s.res.pop();if(s.qs[s.i+1]&&s.qs[s.i+1].probe)s.qs.splice(s.i+1,1);ask()};
+  window.scrollTo({top:0,behavior:"smooth"})}
+const DDIMS=[["presence","Presence"],["eye_line","Eye line"],["framing","Framing"],["energy","Energy"],["pace","Timing"]];
+const DEMO_DFB={scores:{presence:4,eye_line:3,framing:4,energy:3,pace:4},headline:"You look composed and credible; lift your eye line to the lens and you will read as a Head, not a candidate.",
+ worked:["Steady posture and open hands","Well lit, with a calm background"],improve:["Look into the lens, not at your own image","Raise the camera to eye level","Lead with your answer in the first ten seconds"],
+ stronger:"For the next take: say your headline answer first, give one example with a number, then close with what you would do here.",follow_up:""};
+async function deliveryFeedback(s,q){const qq=quota[tier];if(qq.used>=qq.cap){go("plans");toast("Your 10 free AI uses are spent. A Search Pass gives you unlimited.");return}
+  const sample=await sampler();let d=DEMO_DFB,demo=true,imgs=false;
+  if(sample&&frames.length){try{const lim=await sample.limits();imgs=!!(lim&&lim.images)}catch(e){}}
+  if(sample&&imgs){$("#w-fb").disabled=true;$("#w-status").textContent="Watching your take…";
+    const prompt=`You are a search partner coaching a senior school leader on a one-way video interview. Question: "${q.q}". Their take lasted ${Math.round(recSecs)} seconds (ideal 90 to 120). The attached images are frames from the recording, in order.
+Judge only what the frames and timing show; you cannot hear the answer. Score 1 to 5: presence (composure, posture, gestures), eye_line (looking into the lens), framing (head and shoulders, camera height), energy (expression, engagement), pace (use of the time).
+Return JSON only: {"scores":{"presence":n,"eye_line":n,"framing":n,"energy":n,"pace":n},"headline":"one candid sentence","worked":[up to 2],"improve":[up to 3 specific changes],"stronger":"one or two sentences on what to change in the next take"}. British English.`;
+    try{d=await sample.json(prompt,{modelTier:tier==="advanced"?"complex":"default",cache:false,images:frames.slice(0,4)});demo=false;qq.used++;meter()}
+    catch(e){$("#w-fb").disabled=false;$("#w-status").textContent=e&&e.message?e.message:"Feedback didn't complete. Try again.";return}}
+  s.res.push({q,d,words:0});const last=s.i>=s.qs.length-1;
+  $("#ws-stage").innerHTML=(demo?`<span class="sample-flag">Example feedback · live AI isn't available in this view</span>`:"")+qcard(q,s,true)+fbHTML(d,{video:true,words:0,pace:recSecs?fmtT(recSecs)+" take":"",delivery:true},DDIMS)+
+   `<p class="hint">This read covers how you came across on camera. Add what you said next time for feedback on the content too.</p>
+   <div class="row"><button class="btn teal" id="w-next" style="flex:1">${last?"See session summary":"Next question"}</button><button class="btn ghost" id="w-retry">Retry</button></div>`;
+  $("#w-next").onclick=next;$("#w-retry").onclick=()=>{s.res.pop();ask()};window.scrollTo({top:0,behavior:"smooth"})}
+function next(){const s=W.sess;stopClock();if(rec)stopRec();if(s.i<s.qs.length-1){s.i++;ask()}else summary()}
+function summary(){const s=W.sess,r=s.res;
+  if(!r.length){$("#ws-stage").innerHTML=`<div class="card"><p class="hint">No answers yet.</p><button class="btn teal" id="w-again">Start again</button></div>`;$("#w-again").onclick=endSession;return}
+  const rr=r.filter(x=>x.d.scores&&x.d.scores.directness!=null),src=rr.length?rr:r,dd=rr.length?DIMS:DDIMS;const avg=dd.map(([k,l])=>[l,src.reduce((a,x)=>a+(+x.d.scores?.[k]||0),0)/src.length]);const weak=[...avg].sort((a,b)=>a[1]-b[1])[0];
+  $("#ws-stage").innerHTML=`<div class="card"><h3>Session summary <span class="eyebrow">${r.length} answers</span></h3>
+   <div class="sumgrid">${avg.map(([l,v])=>`<div><small>${l}</small><b>${v.toFixed(1)}</b></div>`).join("")}</div>
+   <p class="verdict">Your weakest area was ${weak[0].toLowerCase()}. Work on it first: it separates a credible answer from a shortlisted one.</p></div>
+   <div class="card"><h3>Your answers</h3><div class="map">${r.map(x=>`<div class="maprow"><i class="s-ink"></i><div><b>${esc(x.q.q)}</b><span>${esc(x.d.headline)}</span></div></div>`).join("")}</div></div>
+   <div class="row"><button class="btn teal" id="w-again" style="flex:1">New panel</button><button class="btn ghost" id="w-save">Save to Passport</button></div>`;
+  $("#w-again").onclick=endSession;$("#w-save").onclick=()=>(store.set("history",[...store.get("history",[]),{at:Date.now(),label:s.label,avg:avg.map(([l,v])=>[l,+v.toFixed(1)])}].slice(-20)),toast("Saved on this device"))}
+function restExample(){const q={q:"Why this role, and why now is the right time?",t:"Motivation",r:"Principal",g:"Europe"};
+  $("#ws-stage").innerHTML=`<span class="sample-flag">Example feedback · start a mock for your own</span>`+qcard(q,{label:"Headship final panel",qs:[q],i:0},true)+fbHTML(DEMO_FB,{words:212})}
+restExample();
+
+/* ---------- plans ---------- */
+const PLANS=[
+ {n:"1 month",p:"$29",per:"one payment",f:"One application with a close date coming up.",l:["Unlimited Studio reads and mock panels","Filmed one-way interviews","5 Advanced credits","Saved to your Passport"],b:"Buy 1 month"},
+ {n:"2 months",p:"$49",per:"one payment · $24.50 a month",f:"Several applications at once.",l:["Everything in 1 month","10 Advanced credits","Panels built from each brief","On-camera delivery feedback"],b:"Buy 2 months"},
+ {n:"3 months",p:"$69",per:"one payment · $23 a month",f:"A full search, from first letter to final panel.",l:["Everything in 1 month","20 Advanced credits","Panels built from each brief","On-camera delivery feedback","Alerts when new roles match you"],b:"Buy 3 months",feat:true}];
+$("#plans").innerHTML=PLANS.map(p=>`<div class="plan ${p.feat?"feat":""}"><div class="row" style="justify-content:space-between"><h3>${p.n}</h3>${p.feat?`<span class="badge">Best value</span>`:""}</div><div class="price">${p.p}</div><small class="hint" style="margin-top:-6px">${p.per}</small><p class="who-for">${p.f}</p><ul>${p.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><button class="btn ${p.feat?"teal":""} block" data-buy="${esc(p.n)}">${p.b}</button></div>`).join("");
+const ADDONS=[["Advanced AI · 10 credits","$15","Deeper reads, follow-up probes and delivery feedback"],["Application sprint","$79","One brief: Advanced reads, a panel built from it and a school intelligence pack"],["Live mock panel","$149","60 minutes on video with a former head and a search partner, plus a written debrief"]];
+$("#addons").innerHTML=ADDONS.map(a=>`<div class="addon"><b>${esc(a[0])}</b><span class="pr">${a[1]}</span><span>${esc(a[2])}</span><button class="btn sm ghost" data-buy="${esc(a[0])}">Buy</button></div>`).join("");
+const SKU={"1 month":"pass_1m","2 months":"pass_2m","3 months":"pass_3m","Advanced AI · 10 credits":"credits_10","Application sprint":"sprint","Live mock panel":"live_panel"};
+document.addEventListener("click",async e=>{const b=e.target.closest("[data-buy]");if(!b)return;const sku=SKU[b.dataset.buy];if(!sku)return;
+  b.disabled=true;const t=b.textContent;b.textContent="Opening checkout…";
+  try{const r=await fetch("/api/checkout",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({sku})});const d=await r.json().catch(()=>({}));
+    if(r.ok&&d.url){location.href=d.url;return}
+    $("#checkout-note").textContent=d.error||"Checkout couldn't start. Please try again.";toast(d.error||"Checkout couldn't start")}
+  catch(err){toast("You seem to be offline.")}
+  b.disabled=false;b.textContent=t});
+$("#acc-add").onclick=()=>{const v=$("#acc-code").value.trim().split(/\s+/).filter(x=>/^cs_(test|live)_/.test(x));
+  if(!v.length){toast("That doesn't look like an access code.");return}
+  store.set("tokens",[...new Set([...tokens(),...v])]);$("#acc-code").value="";refreshAccess().then(()=>toast(ENT.passUntil||ENT.advanced?"Access restored":"No active purchase found for that code"))};
+(function(){const q=new URLSearchParams(location.search),paid=q.get("paid");
+  if(paid&&/^cs_(test|live)_/.test(paid)){store.set("tokens",[...new Set([...tokens(),paid])]);
+    history.replaceState(null,"",location.pathname+"#plans");
+    refreshAccess().then(()=>{go("plans");toast("Payment received. You're all set.")});}
+  else refreshAccess()})();
+
+/* ---------- photos: slot -> url, filled once photos are supplied ---------- */
+const PHOTOS={"hero": "/img/hero.jpg", "compass": "/img/compass.jpg", "studio": "/img/studio.jpg", "workshop": "/img/workshop.jpg", "live": "/img/live.jpg"};
+$$("[data-slot]").forEach(f=>{const u=PHOTOS[f.dataset.slot];if(!u)return;const i=new Image();i.alt=f.querySelector("figcaption").textContent.replace("Photo · ","");i.src=u;f.prepend(i);f.classList.add("has")});
+
+const h=(location.hash||"").slice(1);go(views.includes(h)?h:"home");
+})();
+</script>
+</body>
+</html>
