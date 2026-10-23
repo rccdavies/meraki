@@ -34,18 +34,33 @@ export default async function handler(req, res) {
       headers: { "content-type": "application/json", "x-api-key": process.env.ANTHROPIC_API_KEY, "anthropic-version": "2023-06-01" },
       body: JSON.stringify({
         model: adv ? MODELS.advanced : MODELS.standard,
-        max_tokens: 2500,
-        system: "You return only valid JSON, with no markdown fences and no text before or after it.",
+        max_tokens: 8000,
+        system: "Answer by calling the respond tool once. Put the complete answer object, with exactly the keys the user asks for, in the tool input.",
+        tools: [{ name: "respond", description: "Return the answer as a JSON object.", input_schema: { type: "object", additionalProperties: true } }],
+        tool_choice: { type: "tool", name: "respond" },
         messages: [{ role: "user", content }],
       }),
     });
     if (r.status === 429 || r.status === 529) return res.status(429).json({ code: "rate_limited", error: "Busy right now. Try again in a minute." });
-    if (!r.ok) return res.status(502).json({ code: "upstream", error: "The AI didn't respond. Try again." });
+    if (!r.ok) {
+      console.error("anthropic_error", r.status, (await r.text()).slice(0, 500));
+      return res.status(502).json({ code: "upstream", error: "The AI didn't respond. Try again." });
+    }
     const data = await r.json();
+    const tool = (data.content || []).find(c => c.type === "tool_use");
+    if (tool && tool.input && typeof tool.input === "object" && Object.keys(tool.input).length) {
+      // Some models wrap the answer in a single key; unwrap if so.
+      const keys = Object.keys(tool.input);
+      const out = keys.length === 1 && typeof tool.input[keys[0]] === "object" && !Array.isArray(tool.input[keys[0]]) ? tool.input[keys[0]] : tool.input;
+      return res.json({ json: out });
+    }
     const text = (data.content || []).filter(c => c.type === "text").map(c => c.text).join("");
-    const a = text.indexOf("{"), b = text.lastIndexOf("}");
-    try { return res.json({ json: JSON.parse(text.slice(a, b + 1)) }); }
-    catch { return res.status(502).json({ code: "invalid_json", error: "The reply came back garbled. Try again." }); }
+    const a2 = text.indexOf("{"), b2 = text.lastIndexOf("}");
+    try { return res.json({ json: JSON.parse(text.slice(a2, b2 + 1)) }); }
+    catch {
+      console.error("invalid_json", data.stop_reason, text.slice(0, 300));
+      return res.status(502).json({ code: "invalid_json", error: "The reply came back garbled. Try again." });
+    }
   } catch {
     return res.status(502).json({ code: "upstream", error: "The AI didn't respond. Try again." });
   }
