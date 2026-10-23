@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         max_tokens: 8000,
         system: "Answer by calling the respond tool once. Put the complete answer object, with exactly the keys the user asks for, in the tool input.",
         tools: [{ name: "respond", description: "Return the answer as a JSON object.", input_schema: { type: "object", additionalProperties: true } }],
-        tool_choice: { type: "tool", name: "respond" },
+        tool_choice: { type: "auto" },
         messages: [{ role: "user", content }],
       }),
     });
