@@ -565,7 +565,9 @@ const SHARE_URL=location.origin;
 const INVITE=`I've been using Meraki to prepare for school leadership roles. It scores live vacancies against what you want, reads your letter like a search partner and runs mock panels on camera. Worth a look: ${SHARE_URL}`;
 $("#invite-text").textContent=INVITE;
 const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-$("#sh-wa").href=(mobile?"https://wa.me/?text=":"https://web.whatsapp.com/send?text=")+encodeURIComponent(INVITE);
+// wa.me is blocked on some networks (e.g. in the Gulf), so phones open the app directly.
+$("#sh-wa").href=(mobile?"whatsapp://send?text=":"https://web.whatsapp.com/send?text=")+encodeURIComponent(INVITE);
+if(mobile)$("#sh-wa").removeAttribute("target");
 if(navigator.share&&mobile){const b=document.createElement("button");b.className="btn share-out";b.textContent="More…";
   b.onclick=()=>navigator.share({title:"Meraki",text:INVITE}).catch(()=>{});$("#sh-li").after(b)}
 $("#sh-li").href="https://www.linkedin.com/sharing/share-offsite/?url="+encodeURIComponent(SHARE_URL);
