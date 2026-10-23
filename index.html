@@ -517,7 +517,7 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
   <div class="card"><h3>One-off</h3><div id="addons"></div></div>
   <div class="card" id="access-card"><h3>Your access</h3><div id="access-box"></div>
     <div class="row"><input type="text" id="acc-code" placeholder="Paste an access code" aria-label="Access code" style="flex:1;min-width:0"><button class="btn sm" id="acc-add">Add</button></div></div>
-  <p class="note" id="checkout-note">Free includes Compass, typed mock panels and 10 AI uses. Passes, credits and sessions are single payments through Stripe. Access ends when the pass ends; buy another any time. Prices in US dollars.</p>
+  <p class="note" id="checkout-note">Free includes Compass, typed mock panels and 10 AI uses. Passes, credits and sessions are single payments through Stripe. Access ends when the pass ends; buy another any time. Prices in pounds sterling; Stripe can show your local currency at checkout.</p>
 </section>
     </main>
   </div>
@@ -1018,11 +1018,11 @@ restExample();
 
 /* ---------- plans ---------- */
 const PLANS=[
- {n:"1 month",p:"$29",per:"one payment",f:"One application with a close date coming up.",l:["Unlimited Studio reads and mock panels","Filmed one-way interviews","5 Advanced credits","Saved to your Passport"],b:"Buy 1 month"},
- {n:"2 months",p:"$49",per:"one payment · $24.50 a month",f:"Several applications at once.",l:["Everything in 1 month","10 Advanced credits","Panels built from each brief","On-camera delivery feedback"],b:"Buy 2 months"},
- {n:"3 months",p:"$69",per:"one payment · $23 a month",f:"A full search, from first letter to final panel.",l:["Everything in 1 month","20 Advanced credits","Panels built from each brief","On-camera delivery feedback","Alerts when new roles match you"],b:"Buy 3 months",feat:true}];
+ {n:"1 month",p:"£25",per:"one payment",f:"One application with a close date coming up.",l:["Unlimited Studio reads and mock panels","Filmed one-way interviews","5 Advanced credits","Saved to your Passport"],b:"Buy 1 month"},
+ {n:"2 months",p:"£39",per:"one payment · £19.50 a month",f:"Several applications at once.",l:["Everything in 1 month","10 Advanced credits","Panels built from each brief","On-camera delivery feedback"],b:"Buy 2 months"},
+ {n:"3 months",p:"£55",per:"one payment · £18.33 a month",f:"A full search, from first letter to final panel.",l:["Everything in 1 month","20 Advanced credits","Panels built from each brief","On-camera delivery feedback","Alerts when new roles match you"],b:"Buy 3 months",feat:true}];
 $("#plans").innerHTML=PLANS.map(p=>`<div class="plan ${p.feat?"feat":""}"><div class="row" style="justify-content:space-between"><h3>${p.n}</h3>${p.feat?`<span class="badge">Best value</span>`:""}</div><div class="price">${p.p}</div><small class="hint" style="margin-top:-6px">${p.per}</small><p class="who-for">${p.f}</p><ul>${p.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><button class="btn ${p.feat?"teal":""} block" data-buy="${esc(p.n)}">${p.b}</button></div>`).join("");
-const ADDONS=[["Advanced AI · 10 credits","$15","Deeper reads, follow-up probes and delivery feedback"],["Application sprint","$79","One brief: Advanced reads, a panel built from it and a school intelligence pack"],["Live mock panel","$149","60 minutes on video with a former head and a search partner, plus a written debrief"]];
+const ADDONS=[["Advanced AI · 10 credits","£12","Deeper reads, follow-up probes and delivery feedback"],["Application sprint","£65","One brief: Advanced reads, a panel built from it and a school intelligence pack"],["Live mock panel","£119","60 minutes on video with a former head and a search partner, plus a written debrief"]];
 $("#addons").innerHTML=ADDONS.map(a=>`<div class="addon"><b>${esc(a[0])}</b><span class="pr">${a[1]}</span><span>${esc(a[2])}</span><button class="btn sm ghost" data-buy="${esc(a[0])}">Buy</button></div>`).join("");
 const SKU={"1 month":"pass_1m","2 months":"pass_2m","3 months":"pass_3m","Advanced AI · 10 credits":"credits_10","Application sprint":"sprint","Live mock panel":"live_panel"};
 document.addEventListener("click",async e=>{const b=e.target.closest("[data-buy]");if(!b)return;const sku=SKU[b.dataset.buy];if(!sku)return;
