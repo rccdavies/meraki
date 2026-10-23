@@ -1,7 +1,8 @@
 import Stripe from "stripe";
 import { CATALOG, isSku } from "./_catalog.js";
 
-export const stripe = () => new Stripe(process.env.STRIPE_SECRET_KEY);
+// Managed Payments needs API version 2025-03-31.basil or later.
+export const stripe = () => new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2025-03-31.basil" });
 
 // An access code is a paid Checkout Session id. Stripe is the record of what was bought,
 // so no database is needed. Advanced credits used are counted on the PaymentIntent metadata.
