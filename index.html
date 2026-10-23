@@ -1033,7 +1033,7 @@ document.addEventListener("click",async e=>{const b=e.target.closest("[data-buy]
     $("#checkout-note").textContent=d.error||"Checkout couldn't start. Please try again.";toast(d.error||"Checkout couldn't start")}
   catch(err){toast("You seem to be offline.")}
   b.disabled=false;b.textContent=t});
-const isCode=x=>/^cs_(test|live)_/.test(x)||/^MERAKI-[A-Z0-9]{4,}$/i.test(x);
+const isCode=x=>/^cs_(test|live)_/.test(x)||/^[A-Z][A-Z0-9-]{5,24}$/i.test(x);
 $("#acc-add").onclick=()=>{const v=$("#acc-code").value.trim().split(/\s+/).filter(isCode).map(x=>/^cs_/.test(x)?x:x.toUpperCase());
   if(!v.length){toast("That doesn't look like an access code.");return}
   store.set("tokens",[...new Set([...tokens(),...v])]);$("#acc-code").value="";refreshAccess().then(()=>toast(ENT.passUntil||ENT.advanced?"Access added":"That code isn't active"))};

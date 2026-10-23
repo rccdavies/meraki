@@ -5,7 +5,8 @@ import { CATALOG, isSku } from "./_catalog.js";
 // Free trial codes: unlimited standard AI and full access until the expiry (UTC).
 // Add a line to issue a new code; delete it to withdraw one.
 export const TRIALS = {
-  "MERAKI-3PQVT": "2026-10-24T10:15:00Z", // 24-hour friends trial, issued 23 Oct 2026
+  "MERAKI-SOUL": "2026-10-24T10:15:00Z",  // 24-hour friends trial, issued 23 Oct 2026
+  "MERAKI-3PQVT": "2026-10-24T10:15:00Z", // earlier code for the same trial
 };
 
 export const stripe = () => new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2025-03-31.basil" });
