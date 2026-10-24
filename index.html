@@ -17,7 +17,12 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://meraki-omega-seven.vercel.app/img/og.jpg?v=3">
 <link rel="icon" href="/img/icon.png">
-<link rel="apple-touch-icon" href="/img/icon.png">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Meraki">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="theme-color" content="#232A44">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -372,6 +377,13 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
   .bank{grid-template-columns:1fr 1fr;column-gap:24px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+.a2hs{position:fixed;left:var(--gl);right:var(--gr);bottom:calc(var(--tab) + 14px + env(safe-area-inset-bottom,0px));z-index:36;display:flex;align-items:center;gap:12px;
+  background:var(--navy);color:#fff;border-radius:18px;padding:12px 12px 12px 14px;box-shadow:0 10px 30px rgba(10,8,30,.28);border:1.5px solid var(--pink);font-size:15px;line-height:1.35}
+.a2hs img{width:40px;height:40px;border-radius:10px;flex:none}
+.a2hs b{display:block;font-size:15.5px}
+.a2hs .go{border:0;border-radius:999px;background:var(--pink);color:#232A44;font-weight:700;padding:9px 14px;flex:none}
+.a2hs .x{border:0;background:none;color:#fff;opacity:.7;font-size:22px;padding:0 4px;flex:none}
+@media (min-width:900px){.a2hs{display:none}}
 </style>
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -1069,6 +1081,24 @@ const PHOTOS={"hero": "/img/hero.jpg", "compass": "/img/compass.jpg", "studio": 
 $$("[data-slot]").forEach(f=>{const u=PHOTOS[f.dataset.slot];if(!u)return;const i=new Image();i.alt=f.querySelector("figcaption").textContent.replace("Photo · ","");i.src=u;f.prepend(i);f.classList.add("has")});
 
 const h=(location.hash||"").slice(1);go(views.includes(h)?h:"home");
+})();
+
+/* Add to home screen */
+(()=>{
+  const store={get(k,d){try{const v=localStorage.getItem("meraki."+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("meraki."+k,JSON.stringify(v))}catch(e){}}};
+  const mobile=/Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}));
+  const standalone=matchMedia("(display-mode: standalone)").matches||navigator.standalone;
+  const ios=/iPhone|iPad|iPod/i.test(navigator.userAgent), visits=(store.get("visits",0)||0)+1; store.set("visits",visits);
+  if(standalone||!mobile||store.get("a2hsOff",false))return;
+  let deferred=null;
+  const show=(msg,btn)=>{if(document.querySelector(".a2hs"))return;const d=document.createElement("div");d.className="a2hs";
+    d.innerHTML=`<img src="/img/icon-192.png" alt=""><div style="flex:1"><b>Get the Meraki app</b>${msg}</div>${btn?'<button class="go">Install</button>':""}<button class="x" aria-label="Dismiss">×</button>`;
+    d.querySelector(".x").onclick=()=>{store.set("a2hsOff",true);d.remove()};
+    if(btn)d.querySelector(".go").onclick=async()=>{d.remove();deferred.prompt();const r=await deferred.userChoice;if(r.outcome==="accepted")store.set("a2hsOff",true)};
+    document.body.appendChild(d)};
+  addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;setTimeout(()=>show("Add it to your home screen. No app store needed.",true),visits>1?1500:20000)});
+  if(ios)setTimeout(()=>show("Tap <b style=\"display:inline\">Share</b>, then <b style=\"display:inline\">Add to Home Screen</b>.",false),visits>1?1500:20000);
 })();
 </script>
 </body>

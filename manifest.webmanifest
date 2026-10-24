@@ -1,0 +1,16 @@
+{
+  "name": "Meraki | Lead with soul",
+  "short_name": "Meraki",
+  "description": "Live leadership vacancies, letter feedback and mock panels on camera for international school leaders.",
+  "start_url": "/?source=app",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#232A44",
+  "theme_color": "#232A44",
+  "icons": [
+    {"src": "/img/icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "/img/icon-512.png", "sizes": "512x512", "type": "image/png"},
+    {"src": "/img/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+  ]
+}
