@@ -218,9 +218,9 @@ textarea{font-family:var(--body);line-height:1.45;resize:vertical}
 .rs-box input::-webkit-search-cancel-button{display:none}
 .rs-box button{border:0;background:var(--sunk);color:var(--ink);width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;flex:none}
 .rs-row{display:flex;gap:8px;align-items:center;min-width:0}
-.seg{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0}.seg::-webkit-scrollbar{display:none}
-.seg button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 12px;font-size:14px;font-weight:600;white-space:nowrap;flex:none}
-.seg button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+#role-lv{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;flex:1;min-width:0;background:none;padding:0;border-radius:0}#role-lv::-webkit-scrollbar{display:none}
+#role-lv button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 12px;font-size:14px;font-weight:600;white-space:nowrap;flex:none}
+#role-lv button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
 #role-sort{width:auto;flex:none;padding:8px 10px;font-size:14px;border-radius:999px}
 .role mark{background:color-mix(in srgb,var(--pink) 45%,transparent);color:inherit;border-radius:3px;padding:0 1px}
 .role{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px}
@@ -312,6 +312,10 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
 .cam video{width:100%;height:100%;object-fit:cover;display:block}
 .cam .ovl{position:absolute;inset:auto 0 0 0;display:flex;justify-content:space-between;align-items:center;padding:12px;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-family:var(--mono);font-size:12px}
 .cam{cursor:pointer}
+.cam.wide{aspect-ratio:16/9;max-height:70vh}
+.cam .ovl .btn{background:#fff;color:#232A44}
+.cam .ovl .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#888;margin-right:8px;vertical-align:middle}
+.cam .ovl .dot.on{background:#FF4D5E;animation:pulse 1.2s infinite}
 .recbig{display:inline-block;width:64px;height:64px;border-radius:50%;border:4px solid #fff;position:relative}
 .recbig::after{content:"";position:absolute;inset:7px;border-radius:50%;background:#FF4D5E}
 .cam .ph{color:#A6A3C8;font-family:var(--body);font-size:16px;padding:24px;text-align:center}
@@ -1002,7 +1006,7 @@ function qcard(q,s,compact){const real=s.qs.filter(x=>!x.probe).length,pos=s.qs.
   <div class="progress">${s.qs.map((x,k)=>`<i class="${k<s.i?"done":k===s.i?"now":""}"></i>`).join("")}</div>
   <p class="qtext">${esc(q.q)}</p><span class="eyebrow">${q.probe?"Probe from the panel":q.tailored?`${esc(s.label)} · tailored to you`:q.r&&q.g!=="Studio"?`${esc(s.label)} · from a real ${esc(q.r)} panel`:esc(s.label)}</span></div>`}
 const wc=t=>(t.trim().match(/\S+/g)||[]).length;
-function ask(){const s=W.sess,q=s.qs[s.i];frames=[];recSecs=0;const typed=s.fmt==="typed";
+function ask(){const s=W.sess,q=s.qs[s.i];frames=[];recSecs=0;if(typeof killStream==="function")killStream();const typed=s.fmt==="typed";
   $("#ws-stage").innerHTML=qcard(q,s)+`<div class="card">
    ${typed?`<div class="field"><label for="w-ans">Your answer</label>
    <textarea id="w-ans" rows="8" placeholder="Answer as you would speak it. Aim for 150 to 300 words."></textarea></div>`:`<label class="cam" id="cam" for="v-file"><div class="ph" id="cam-ph"><span class="recbig" aria-hidden="true"></span><b style="display:block;font-family:var(--display);font-size:21px;color:#fff;margin:12px 0 4px">Tap to record</b>Opens your front camera. One take, up to two minutes.</div></label>
@@ -1016,23 +1020,44 @@ function ask(){const s=W.sess,q=s.qs[s.i];frames=[];recSecs=0;const typed=s.fmt=
   $("#w-fb").onclick=feedback;$("#w-skip").onclick=next;
   if(typed)runClock("up",150);else{setupCam();runClock("think",30)}
   window.scrollTo({top:0,behavior:"smooth"})}
+const canLive=()=>!mobile&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
+function killStream(){if(W.stream){W.stream.getTracks().forEach(t=>t.stop());W.stream=null}}
 function setupCam(){
   $("#v-file").onchange=e=>{const f=e.target.files&&e.target.files[0];if(f)useFile(f);e.target.value=""};
-  $("#w-fb").disabled=true;$("#w-fb").textContent="Record first"}
+  $("#w-fb").disabled=true;$("#w-fb").textContent="Record first";
+  if(canLive()){const cam=$("#cam");cam.classList.add("wide");
+    cam.querySelector(".ph").lastChild.textContent="Turns on your webcam here. One take, up to two minutes.";cam.querySelector(".ph b").textContent="Click to record";
+    cam.addEventListener("click",ev=>{ev.preventDefault();openCam()});
+    $("#v-note").innerHTML=`Use the thinking time, then click to record. <label for="v-file" class="linkbtn">Or upload a video</label>`}}
+async function openCam(){const note=$("#v-note");note.textContent="Allow camera access in your browser…";
+  let st=null;try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:1280},height:{ideal:720}},audio:true})}
+  catch(e){try{st=await navigator.mediaDevices.getUserMedia({video:true})}catch(e2){}}
+  if(!st){note.innerHTML=`Camera blocked. Allow camera access in your browser's address bar, or <label for="v-file" class="linkbtn">upload a video</label>.`;return}
+  killStream();W.stream=st;
+  const box=document.createElement("div");box.className="cam wide";box.id="cam";
+  box.innerHTML=`<video id="live" autoplay muted playsinline style="transform:scaleX(-1)"></video>
+   <div class="ovl" id="cam-ovl"><span><span class="dot" id="v-dot"></span><span id="v-time">Ready</span></span>
+   <span><button class="btn sm" id="v-rec" type="button">● Start recording</button><button class="btn sm" id="v-stop" type="button" hidden>■ Stop</button></span></div>`;
+  $("#cam").replaceWith(box);const v=$("#live");v.srcObject=st;
+  $("#v-rec").onclick=startRec;$("#v-stop").onclick=stopRec;
+  note.textContent="Check your framing, then start recording. Look at the camera, not the screen."}
 function grab(v){try{const c=document.createElement("canvas");const w=480,h=Math.round(480*(v.videoHeight||9)/(v.videoWidth||16));c.width=w;c.height=h;c.getContext("2d").drawImage(v,0,0,w,h);
   c.toBlob(b=>{if(b&&frames.length<4)frames.push(b)},"image/jpeg",.72)}catch(e){}}
-function startRec(){if(!W.stream||rec)return;chunks=[];try{rec=new MediaRecorder(W.stream)}catch(e){$("#v-note").textContent="Recording isn't supported in this browser. Upload a recording instead.";return}
+function startRec(){if(!W.stream||rec)return;chunks=[];frames=[];recSecs=0;
+  try{rec=new MediaRecorder(W.stream)}catch(e){$("#v-note").innerHTML=`Recording isn't supported in this browser. <label for="v-file" class="linkbtn">Upload a video</label> instead.`;return}
   rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
-  rec.onstop=()=>{const blob=new Blob(chunks,{type:rec.mimeType||"video/webm"});rec=null;const v=$("#live");if(v){v.srcObject=null;v.muted=false;v.controls=true;v.src=URL.createObjectURL(blob)}
-    $("#cam-ovl").hidden=true;$("#v-note").textContent=`Recorded ${fmtT(recSecs)}. Add the transcript, then get feedback.`};
-  rec.start();$("#cam-ovl").hidden=false;$("#v-rec").hidden=true;$("#v-stop").hidden=false;$("#v-note").textContent="Recording. Stop when you've finished.";runClock("rec",120);
+  rec.onstop=()=>{const blob=new Blob(chunks,{type:rec.mimeType||"video/webm"}),secs=recSecs,fr=frames.slice();rec=null;killStream();useFile(blob,{secs,frames:fr})};
+  rec.start(1000);$("#v-rec").hidden=true;$("#v-stop").hidden=false;$("#v-dot").classList.add("on");
+  $("#v-note").textContent="Recording. Stop when you've finished.";runClock("rec",120);
   const live=$("#live");setTimeout(()=>live&&grab(live),3000);frameT=setInterval(()=>live&&grab(live),25000)}
-function stopRec(){stopClock();clearInterval(frameT);if(rec&&rec.state!=="inactive"){const live=$("#live");live&&grab(live);rec.stop()}const s=$("#v-stop");if(s)s.hidden=true}
-function useFile(f){stopClock();frames=[];recSecs=0;
+function stopRec(){stopClock();clearInterval(frameT);if(rec&&rec.state!=="inactive"){const live=$("#live");live&&grab(live);setTimeout(()=>rec&&rec.state!=="inactive"&&rec.stop(),150)}const s=$("#v-stop");if(s)s.hidden=true}
+function useFile(f,live){stopClock();if(!live){frames=[];recSecs=0}
   const v=document.createElement("video");v.controls=true;v.playsInline=true;v.muted=true;v.preload="auto";v.id="live";v.src=URL.createObjectURL(f);
-  const cam=$("#cam"),box=document.createElement("div");box.className="cam";box.id="cam";box.appendChild(v);cam.replaceWith(box);
-  const n=$("#v-note");n.innerHTML=`Recorded. <label for="v-file" style="color:var(--teal-ink);font-weight:600;cursor:pointer;text-decoration:underline">Record again</label>`;
+  const cam=$("#cam"),box=document.createElement("div");box.className="cam"+(canLive()?" wide":"");box.id="cam";box.appendChild(v);cam.replaceWith(box);
+  const n=$("#v-note");n.innerHTML=`Recorded. <label for="v-file" id="v-again" class="linkbtn">Record again</label>`;
+  if(canLive())$("#v-again").addEventListener("click",ev=>{ev.preventDefault();openCam()});
   const fb=$("#w-fb");fb.disabled=false;fb.textContent="Get feedback";
+  if(live){recSecs=live.secs;frames=live.frames;n.insertAdjacentHTML("afterbegin",`${fmtT(recSecs)} · `);v.muted=false;return}
   v.onloadedmetadata=async()=>{recSecs=isFinite(v.duration)?v.duration:0;
     if(recSecs)n.insertAdjacentHTML("afterbegin",`${fmtT(recSecs)}${recSecs>125?" (over two minutes)":""} · `);
     try{await v.play();v.pause()}catch(e){}
