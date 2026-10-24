@@ -437,7 +437,7 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
     <div class="about-grid">
       <div><b>Who we are</b><p>Serving international school leaders who have run searches, sat on panels and been through them as candidates. We built the tool we wished we'd had.</p></div>
       <div><b>Why it exists</b><p>Search firms work for schools. Candidates prepare alone, guess what the panel wants and often hear nothing back. Meraki works for you.</p></div>
-      <div><b>Your search stays yours</b><p>Your letters, evidence and recordings are private to you. Nothing goes to a school or a search firm without your say-so, and you can delete it all at any time.</p></div>
+      <div><b>Your search stays yours</b><p>Your letters, evidence and recordings are private to you. Nothing goes to a school or a search firm without your say-so, and you can delete it all at any time from Plans → Your data.</p></div>
     </div>
   </section>
 
@@ -530,7 +530,7 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
   </div>
   <div class="card live setup-only">
     <figure class="photo" data-slot="live" style="--fp:55% 45%"><figcaption>Photo · a leadership workshop in session</figcaption></figure>
-    <div><span class="eyebrow">Coming soon</span><h3>Meraki Sessions</h3><p class="hint">Live mock panels with a former head and a search partner, and small-group workshops for aspiring heads.</p></div>
+    <div><span class="eyebrow">Coming soon</span><h3>Meraki Sessions</h3><p class="hint">Live mock panels with a serving or former head and a search partner, and small-group workshops for aspiring heads.</p></div>
     <span class="soon">Coming soon</span>
   </div>
 </section>
@@ -543,6 +543,9 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
   <div class="card"><h3>One-off</h3><div id="addons"></div></div>
   <div class="card" id="access-card"><h3>Your access</h3><div id="access-box"></div>
     <div class="row"><input type="text" id="acc-code" placeholder="Paste an access code" aria-label="Access code" style="flex:1;min-width:0"><button class="btn sm" id="acc-add">Add</button></div></div>
+  <div class="card" id="data-card"><h3>Your data</h3>
+    <p class="hint">Your search profile, letters, evidence bank and practice history are stored only on this device, not on our servers. Studio and Workshop text, and a few still frames from any recording, are sent to our AI provider to generate feedback and aren't kept by Meraki. The recording itself stays on your device. Payments are handled by Stripe, which keeps your receipt and email.</p>
+    <div class="row" style="flex-wrap:wrap"><button class="btn ghost sm" id="data-del">Delete my data</button><label class="hint" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="data-keep" checked style="accent-color:var(--pink-ink)"> Keep my access codes</label></div></div>
   <p class="note" id="checkout-note">Free includes Compass, typed mock panels and 10 AI uses. Passes, credits and sessions are single payments through Stripe. Access ends when the pass ends; buy another any time. Prices in pounds sterling; Stripe can show your local currency at checkout.</p>
 </section>
     </main>
@@ -1051,9 +1054,9 @@ restExample();
 const PLANS=[
  {n:"1 month",p:"£24.99",per:"one payment",f:"One application with a close date coming up.",l:["Unlimited Studio reads and mock panels","Filmed one-way interviews","5 Advanced credits","Saved to your Passport"],b:"Buy 1 month"},
  {n:"2 months",p:"£39.99",per:"one payment · £20 a month",f:"Several applications at once.",l:["Everything in 1 month","10 Advanced credits","Panels built from each brief","On-camera delivery feedback"],b:"Buy 2 months"},
- {n:"3 months",p:"£49.99",per:"one payment · £16.66 a month",f:"A full search, from first letter to final panel.",l:["Everything in 1 month","20 Advanced credits","Panels built from each brief","On-camera delivery feedback","Alerts when new roles match you"],b:"Buy 3 months",feat:true}];
+ {n:"3 months",p:"£49.99",per:"one payment · £16.66 a month",f:"A full search, from first letter to final panel.",l:["Everything in 1 month","20 Advanced credits","Panels built from each brief","On-camera delivery feedback","New-role match alerts (coming soon)"],b:"Buy 3 months",feat:true}];
 $("#plans").innerHTML=PLANS.map(p=>`<div class="plan ${p.feat?"feat":""}"><div class="row" style="justify-content:space-between"><h3>${p.n}</h3>${p.feat?`<span class="badge">Best value</span>`:""}</div><div class="price">${p.p}</div><small class="hint" style="margin-top:-6px">${p.per}</small><p class="who-for">${p.f}</p><ul>${p.l.map(x=>`<li>${esc(x)}</li>`).join("")}</ul><button class="btn ${p.feat?"teal":""} block" data-buy="${esc(p.n)}">${p.b}</button></div>`).join("");
-const ADDONS=[["Advanced AI · 10 credits","£9.99","Deeper reads, follow-up probes and delivery feedback"],["Application sprint","£29.99","14 days of full access for one brief: Advanced reads, a panel built from it and a school intelligence pack"],["Live mock panels","","60 minutes on video with a former head and a search partner, plus a written debrief.",true]];
+const ADDONS=[["Advanced AI · 10 credits","£9.99","Deeper reads, follow-up probes and delivery feedback"],["Application sprint","£29.99","14 days of full access for one brief: Advanced reads, a panel built from it and a school intelligence pack"],["Live mock panels","","60 minutes on video with a serving or former head and a search partner, plus a written debrief.",true]];
 $("#addons").innerHTML=ADDONS.map(a=>a[3]?`<div class="addon"><b>${esc(a[0])}</b><span class="soon">Coming soon</span><span>${esc(a[2])}</span></div>`:`<div class="addon"><b>${esc(a[0])}</b><span class="pr">${a[1]}</span><span>${esc(a[2])}</span><button class="btn sm ghost" data-buy="${esc(a[0])}">Buy</button></div>`).join("");
 const SKU={"1 month":"pass_1m","2 months":"pass_2m","3 months":"pass_3m","Advanced AI · 10 credits":"credits_10","Application sprint":"sprint"};
 document.addEventListener("click",async e=>{const b=e.target.closest("[data-buy]");if(!b)return;const sku=SKU[b.dataset.buy];if(!sku)return;
@@ -1083,6 +1086,19 @@ $$("[data-slot]").forEach(f=>{const u=PHOTOS[f.dataset.slot];if(!u)return;const 
 const h=(location.hash||"").slice(1);go(views.includes(h)?h:"home");
 })();
 
+/* Delete my data: two taps, no browser dialog */
+(()=>{const b=document.getElementById("data-del");if(!b)return;let armed=0;
+  b.onclick=async()=>{
+    if(!armed){armed=1;b.textContent="Tap again to delete everything";b.classList.add("teal");setTimeout(()=>{armed=0;b.textContent="Delete my data";b.classList.remove("teal")},5000);return}
+    const keep=document.getElementById("data-keep").checked;let tok=null;
+    try{tok=localStorage.getItem("meraki.tokens")}catch(e){}
+    try{Object.keys(localStorage).filter(k=>k.startsWith("meraki.")).forEach(k=>localStorage.removeItem(k));sessionStorage.clear()}catch(e){}
+    if(keep&&tok)try{localStorage.setItem("meraki.tokens",tok)}catch(e){}
+    try{if(window.caches)for(const k of await caches.keys())await caches.delete(k)}catch(e){}
+    try{if(window.indexedDB&&indexedDB.databases)for(const d of await indexedDB.databases())indexedDB.deleteDatabase(d.name)}catch(e){}
+    location.href="/?deleted=1"};
+  if(new URLSearchParams(location.search).get("deleted")){history.replaceState(null,"","/");setTimeout(()=>{const t=document.getElementById("toast");if(t){t.textContent="Your data has been deleted from this device";t.hidden=false;setTimeout(()=>t.hidden=true,3500)}},400)}
+})();
 /* Add to home screen */
 (()=>{
   const store={get(k,d){try{const v=localStorage.getItem("meraki."+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("meraki."+k,JSON.stringify(v))}catch(e){}}};
