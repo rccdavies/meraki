@@ -745,7 +745,8 @@ let freeUsed=+store.get("freeUsed",0)||0;
 const FREE_CAP=10;
 const quota={
   standard:{label:"AI uses left",get cap(){return ENT.passUntil?Infinity:FREE_CAP},get used(){return ENT.passUntil?0:freeUsed},set used(v){if(!ENT.passUntil){freeUsed=v;store.set("freeUsed",v)}}},
-  advanced:{label:"Advanced credits",get cap(){return ENT.advanced},get used(){return 0},set used(v){refreshAccess()}}};
+  advanced:{label:"Advanced credits",get cap(){return ENT.advanced+trialAdvLeft()},get used(){return 0},set used(v){if(ENT.advanced<1&&ENT.trial)store.set(trialKey(),trialAdvUsed()+1);refreshAccess()}}};
+const TRIAL_ADV=3,trialKey=()=>"trialAdv:"+(ENT.passUntil||""),trialAdvUsed=()=>+store.get(trialKey(),0)||0,trialAdvLeft=()=>ENT.trial?Math.max(0,TRIAL_ADV-trialAdvUsed()):0;
 async function refreshAccess(){const t=tokens();if(!t.length){renderPass();renderRoles();return}
   try{const r=await fetch("/api/access",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({tokens:t})});
     if(r.ok){const d=await r.json();Object.assign(ENT,d)}}catch(e){}
@@ -753,7 +754,7 @@ async function refreshAccess(){const t=tokens();if(!t.length){renderPass();rende
 function renderPass(){const mini=$(".plan-mini b");const d=ENT.passUntil&&new Date(ENT.passUntil);
   if(mini)mini.textContent=d?"Search Pass · until "+d.toLocaleDateString("en-GB",{day:"numeric",month:"short"}):"Free";
   const box=$("#access-box");if(!box)return;const t=tokens();
-  box.innerHTML=t.length?`<b>${d?"Your pass runs until "+d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):"No active pass"}</b><p class="hint">${ENT.advanced} Advanced credits left. To use Meraki on another device, copy your access code and paste it there.</p>
+  box.innerHTML=t.length?`<b>${d?"Your pass runs until "+d.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"}):"No active pass"}</b><p class="hint">${ENT.trial?`Free trial: ${trialAdvLeft()} of ${TRIAL_ADV} Advanced uses left.`:`${ENT.advanced} Advanced credits left.`} To use Meraki on another device, copy your access code and paste it there.</p>
    <div class="row"><button class="btn sm ghost" id="acc-copy">Copy access code</button></div>`:`<p class="hint">Bought a pass on another device? Paste your access code to bring it here.</p>`;
   const c=$("#acc-copy");if(c)c.onclick=()=>navigator.clipboard?.writeText(t.join(" ")).then(()=>toast("Access code copied")).catch(()=>toast(t.join(" ")))}
 function meter(){const q=quota[tier],left=q.cap-q.used,inf=left===Infinity;$("#m-label").textContent=q.label;
@@ -767,7 +768,7 @@ const b64=blob=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(String(f
 const AI={
   async limits(){return {images:{maxCount:4}}},
   async json(prompt,opts={}){const images=opts.images?await Promise.all(opts.images.map(b64)):[];
-    let r;try{r=await fetch("/api/ai",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({prompt,images,tier:opts.modelTier==="complex"?"advanced":"standard",tokens:tokens()})})}
+    let r;try{r=await fetch("/api/ai",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({prompt,images,tier:opts.modelTier==="complex"?"advanced":"standard",tokens:tokens(),trialAdvUsed:trialAdvUsed()})})}
     catch(e){throw {code:"network",message:"You seem to be offline."}}
     const d=await r.json().catch(()=>({}));
     if(!r.ok){if(d.code==="no_credits"){go("plans");toast(d.error)}throw {code:d.code||"error",message:d.error||"Something went wrong."}}

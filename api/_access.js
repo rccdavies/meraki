@@ -2,11 +2,13 @@ import Stripe from "stripe";
 import { CATALOG, isSku } from "./_catalog.js";
 
 // Managed Payments needs API version 2025-03-31.basil or later.
-// Free trial codes: unlimited standard AI and full access until the expiry (UTC).
+// Free trial codes: unlimited standard AI, full access and TRIAL_ADVANCED Advanced uses until the expiry (UTC).
+// The Advanced count is kept on the user's device (no database), so it's a soft cap.
+export const TRIAL_ADVANCED = 3;
 // Add a line to issue a new code; delete it to withdraw one.
 export const TRIALS = {
-  "MERAKI-SOUL": "2026-10-24T10:15:00Z",  // 24-hour friends trial, issued 23 Oct 2026
-  "MERAKI-3PQVT": "2026-10-24T10:15:00Z", // earlier code for the same trial
+  "MERAKI-SOUL": "2026-10-26T10:30:00Z",  // 48-hour friends trial, reissued 24 Oct 2026 (ends 14:30 Muscat, Mon 26 Oct)
+  "MERAKI-3PQVT": "2026-10-24T10:15:00Z", // earlier code, expired
 };
 
 export const stripe = () => new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2025-03-31.basil" });

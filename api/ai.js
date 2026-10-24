@@ -1,4 +1,4 @@
-import { entitlements, spendAdvanced } from "./_access.js";
+import { entitlements, spendAdvanced, TRIAL_ADVANCED } from "./_access.js";
 
 const MODELS = {
   standard: process.env.MODEL_STANDARD || "claude-sonnet-5-5",
@@ -10,15 +10,16 @@ export const config = { maxDuration: 60 };
 export default async function handler(req, res) {
   if (req.method !== "POST") return res.status(405).json({ error: "Method not allowed" });
   if (!process.env.ANTHROPIC_API_KEY) return res.status(503).json({ code: "unavailable", error: "AI isn't switched on yet." });
-  const { prompt, tier, images, tokens } = req.body || {};
+  const { prompt, tier, images, tokens, trialAdvUsed } = req.body || {};
   if (typeof prompt !== "string" || prompt.length < 20 || prompt.length > 60000)
     return res.status(400).json({ code: "bad_request", error: "Nothing to read." });
 
   const adv = tier === "advanced";
   if (adv) {
     const ent = await entitlements(tokens).catch(() => null);
-    if (!ent || ent.advanced < 1) return res.status(402).json({ code: "no_credits", error: "You're out of Advanced credits. Top up on the Plans page." });
-    await spendAdvanced(ent);
+    const trialOk = ent && ent.advanced < 1 && ent.trial && (Number(trialAdvUsed) || 0) < TRIAL_ADVANCED;
+    if (!ent || (ent.advanced < 1 && !trialOk)) return res.status(402).json({ code: "no_credits", error: "You're out of Advanced credits. Top up on the Plans page." });
+    if (!trialOk) await spendAdvanced(ent);
   }
 
   const content = [];
