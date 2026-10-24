@@ -312,6 +312,10 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
 .cam video{width:100%;height:100%;object-fit:cover;display:block}
 .cam .ovl{position:absolute;inset:auto 0 0 0;display:flex;justify-content:space-between;align-items:center;padding:12px;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-family:var(--mono);font-size:12px}
 .cam{cursor:pointer}
+.recwrap{position:absolute;inset:0;display:grid;place-items:center;background:rgba(10,12,30,.28)}
+.bigrec{border:0;border-radius:999px;padding:16px 30px;font-family:var(--display);font-weight:800;font-size:20px;background:#fff;color:#232A44;display:inline-flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.35);cursor:pointer}
+.bigrec .rdot{width:16px;height:16px;border-radius:50%;background:#FF4D5E}
+.bigrec:disabled{background:rgba(255,255,255,.75);color:#5D6380;font-size:16px;font-weight:600;cursor:not-allowed;box-shadow:none}
 .cam.locked{cursor:not-allowed;filter:grayscale(1);opacity:.45}
 .qcard.veiled .qtext{filter:blur(9px);user-select:none;opacity:.6}
 .vbrief{background:var(--sunk);border-radius:var(--r-sm);padding:16px;display:grid;gap:10px}
@@ -322,6 +326,7 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
 .thinkbar .tb-track{height:8px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
 .thinkbar .tb-track i{display:block;height:100%;width:100%;background:var(--pink);border-radius:99px;transition:width .25s linear}
 .thinkbar .tb-skip{color:#F3D0E2;justify-self:start;font-size:14px}
+.thinkbar.live{background:#FF4D5E;color:#fff}.thinkbar.live .tb-track{display:none}
 .thinkbar.go{background:var(--pink);color:#232A44}.thinkbar.go .tb-track{display:none}
 .cam.wide{aspect-ratio:16/9;max-height:70vh}
 .cam .ovl .btn{background:#fff;color:#232A44}
@@ -1009,11 +1014,11 @@ $("#w-end").onclick=endSession;
 let clockT=null,t0=0,rec=null,chunks=[],frames=[],recSecs=0,frameT=null;
 function stopClock(){clearInterval(clockT);clockT=null}
 function fmtT(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
-function thinkDone(){const tb=$("#v-think");if(tb){tb.classList.add("go");$("#v-think-lab").textContent="Time's up. Record your answer now";$("#v-think-t").textContent="";const sk=$("#v-think-skip");if(sk)sk.hidden=true;const f=$("#v-think-fill");if(f)f.style.width="0%"}
-  const cam=$("#cam");if(cam)cam.classList.remove("locked");const n=$("#v-note");if(n&&!rec)n.innerHTML=canLive()?`Click to record. <label for="v-file" class="linkbtn">Or upload a video</label>`:"Tap to record.";}
+function thinkDone(){W.thinkOver=true;recBtn();const tb=$("#v-think");if(tb){tb.classList.add("go");$("#v-think-lab").textContent="Time's up. Record your answer now";$("#v-think-t").textContent="";const sk=$("#v-think-skip");if(sk)sk.hidden=true;const f=$("#v-think-fill");if(f)f.style.width="0%"}
+  const cam=$("#cam");if(cam)cam.classList.remove("locked");const n=$("#v-note");if(n&&!rec)n.innerHTML=$("#v-rec")?"Click Record and start speaking. Recording begins straight away.":canLive()?`Click to record: recording begins straight away. <label for="v-file" class="linkbtn">Or upload a video</label>`:"Tap to record.";}
 function runClock(mode,limit){stopClock();t0=Date.now();
   clockT=setInterval(()=>{const el=$("#clock");const s=(Date.now()-t0)/1000;if(!el)return;
-    if(mode==="think"){const tt=$("#v-think-t"),fill=$("#v-think-fill");if(tt)tt.textContent=fmtT(limit-s);if(fill)fill.style.width=Math.max(0,100-100*s/limit)+"%";
+    if(mode==="think"){const tt=$("#v-think-t"),fill=$("#v-think-fill");if(tt)tt.textContent=fmtT(limit-s);if(fill)fill.style.width=Math.max(0,100-100*s/limit)+"%";recBtn(limit-s);
       if(s>=limit){stopClock();thinkDone()}}
     else{el.textContent=fmtT(s);el.classList.toggle("over",s>(limit||150));if(mode==="rec"){recSecs=s;const r=$("#v-time");if(r)r.textContent=fmtT(s)+" / 2:00";if(s>=120)stopRec()}}},250)}
 function qcard(q,s,compact){const real=s.qs.filter(x=>!x.probe).length,pos=s.qs.slice(0,s.i+1).filter(x=>!x.probe).length;
@@ -1021,7 +1026,7 @@ function qcard(q,s,compact){const real=s.qs.filter(x=>!x.probe).length,pos=s.qs.
   <div class="progress">${s.qs.map((x,k)=>`<i class="${k<s.i?"done":k===s.i?"now":""}"></i>`).join("")}</div>
   <p class="qtext">${esc(q.q)}</p><span class="eyebrow">${q.probe?"Probe from the panel":q.tailored?`${esc(s.label)} · tailored to you`:q.r&&q.g!=="Studio"?`${esc(s.label)} · from a real ${esc(q.r)} panel`:esc(s.label)}</span></div>`}
 const wc=t=>(t.trim().match(/\S+/g)||[]).length;
-function ask(){const s=W.sess,q=s.qs[s.i];frames=[];recSecs=0;if(typeof killStream==="function")killStream();const typed=s.fmt==="typed";
+function ask(){const s=W.sess,q=s.qs[s.i];frames=[];recSecs=0;W.thinkOver=false;if(typeof killStream==="function")killStream();const typed=s.fmt==="typed";
   $("#ws-stage").innerHTML=qcard(q,s)+`<div class="card">
    ${typed?`<div class="field"><label for="w-ans">Your answer</label>
    <textarea id="w-ans" rows="8" placeholder="Answer as you would speak it. Aim for 150 to 300 words."></textarea></div>`:`<div class="vbrief" id="v-brief"><b>How this works</b>
@@ -1041,20 +1046,20 @@ function ask(){const s=W.sess,q=s.qs[s.i];frames=[];recSecs=0;if(typeof killStre
   $("#w-ans").addEventListener("input",()=>{$("#w-wc").textContent=wc($("#w-ans").value)+" words"});
   $("#w-fb").onclick=feedback;$("#w-skip").onclick=next;
   if(typed)runClock("up",150);else{setupCam();$("#clock").hidden=true;$(".qcard").classList.add("veiled");
-    $("#v-go").onclick=()=>{$("#v-brief").hidden=true;$(".qcard").classList.remove("veiled");$("#v-think").hidden=false;$("#v-stage").hidden=false;runClock("think",30)};
+    $("#v-go").onclick=()=>{$("#v-brief").hidden=true;$(".qcard").classList.remove("veiled");$("#v-think").hidden=false;$("#v-stage").hidden=false;runClock("think",30);if(canLive())openCam(false)};
     $("#v-think-skip").onclick=()=>{stopClock();thinkDone()}}
   window.scrollTo({top:0,behavior:"smooth"})}
 const canLive=()=>!mobile&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
 function killStream(){if(W.stream){W.stream.getTracks().forEach(t=>t.stop());W.stream=null}}
 function setupCam(){
   $("#v-file").onchange=e=>{const f=e.target.files&&e.target.files[0];if(f)useFile(f);e.target.value=""};
-  $("#w-fb").disabled=true;$("#w-fb").textContent="Record first";
+  $("#w-fb").disabled=true;$("#w-fb").textContent="Feedback after you record";
   $("#cam").addEventListener("click",ev=>{if(ev.currentTarget.classList.contains("locked")){ev.preventDefault();ev.stopImmediatePropagation()}},true);
   if(canLive()){const cam=$("#cam");cam.classList.add("wide");
-    cam.querySelector(".ph").lastChild.textContent="Turns on your webcam here. One take, up to two minutes.";cam.querySelector(".ph b").textContent="Click to record";
-    cam.addEventListener("click",ev=>{ev.preventDefault();openCam()});
+    cam.querySelector(".ph").lastChild.textContent="Recording starts as soon as your webcam is on. One take, up to two minutes.";cam.querySelector(".ph b").textContent="Click to record";
+    cam.addEventListener("click",ev=>{ev.preventDefault();openCam(true)});
   }}
-async function openCam(){const note=$("#v-note");note.textContent="Allow camera access in your browser…";
+async function openCam(autoStart){const note=$("#v-note");note.textContent="Allow camera access in your browser…";
   let st=null;try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:1280},height:{ideal:720}},audio:true})}
   catch(e){try{st=await navigator.mediaDevices.getUserMedia({video:true})}catch(e2){}}
   if(!st){note.innerHTML=`Camera blocked. Allow camera access in your browser's address bar, or <label for="v-file" class="linkbtn">upload a video</label>.`;return}
@@ -1062,17 +1067,22 @@ async function openCam(){const note=$("#v-note");note.textContent="Allow camera 
   const box=document.createElement("div");box.className="cam wide";box.id="cam";
   box.innerHTML=`<video id="live" autoplay muted playsinline style="transform:scaleX(-1)"></video>
    <div class="ovl" id="cam-ovl"><span><span class="dot" id="v-dot"></span><span id="v-time">Ready</span></span>
-   <span><button class="btn sm" id="v-rec" type="button">● Start recording</button><button class="btn sm" id="v-stop" type="button" hidden>■ Stop</button></span></div>`;
+   <span><button class="btn sm" id="v-stop" type="button" hidden>■ Stop</button></span></div>
+   <div class="recwrap" id="v-recwrap"><button class="bigrec" id="v-rec" type="button"></button></div>`;
   $("#cam").replaceWith(box);const v=$("#live");v.srcObject=st;
-  $("#v-rec").onclick=startRec;$("#v-stop").onclick=stopRec;
-  note.textContent="Check your framing, then start recording. Look at the camera, not the screen."}
+  $("#v-rec").onclick=startRec;$("#v-stop").onclick=stopRec;recBtn();
+  if(autoStart&&W.thinkOver){note.textContent="Recording starts now.";setTimeout(startRec,400)}
+  else note.textContent="Check your framing while you think. Look at the camera, not the screen."}
+function recBtn(left){const b=$("#v-rec");if(!b)return;b.disabled=!W.thinkOver;
+  b.innerHTML=W.thinkOver?`<span class="rdot"></span>Record`:`Record unlocks in ${left==null?"0:30":fmtT(left)}`}
 function grab(v){try{const c=document.createElement("canvas");const w=480,h=Math.round(480*(v.videoHeight||9)/(v.videoWidth||16));c.width=w;c.height=h;c.getContext("2d").drawImage(v,0,0,w,h);
   c.toBlob(b=>{if(b&&frames.length<4)frames.push(b)},"image/jpeg",.72)}catch(e){}}
 function startRec(){if(!W.stream||rec)return;chunks=[];frames=[];recSecs=0;
   try{rec=new MediaRecorder(W.stream)}catch(e){$("#v-note").innerHTML=`Recording isn't supported in this browser. <label for="v-file" class="linkbtn">Upload a video</label> instead.`;return}
   rec.ondataavailable=e=>e.data.size&&chunks.push(e.data);
   rec.onstop=()=>{const blob=new Blob(chunks,{type:rec.mimeType||"video/webm"}),secs=recSecs,fr=frames.slice();rec=null;killStream();useFile(blob,{secs,frames:fr})};
-  rec.start(1000);$("#v-rec").hidden=true;$("#v-stop").hidden=false;$("#v-dot").classList.add("on");
+  rec.start(1000);$("#v-recwrap").hidden=true;$("#v-stop").hidden=false;
+  {const tb=$("#v-think");if(tb){tb.classList.remove("go");tb.classList.add("live");$("#v-think-lab").textContent="● Recording. Speak now"}}$("#v-dot").classList.add("on");
   $("#v-note").textContent="Recording. Stop when you've finished.";runClock("rec",120);
   const live=$("#live");setTimeout(()=>live&&grab(live),3000);frameT=setInterval(()=>live&&grab(live),25000)}
 function stopRec(){stopClock();clearInterval(frameT);if(rec&&rec.state!=="inactive"){const live=$("#live");live&&grab(live);setTimeout(()=>rec&&rec.state!=="inactive"&&rec.stop(),150)}const s=$("#v-stop");if(s)s.hidden=true}
