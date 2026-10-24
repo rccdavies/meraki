@@ -599,7 +599,7 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
   <div class="card" id="access-card"><h3>Your access</h3><div id="access-box"></div>
     <div class="row"><input type="text" id="acc-code" placeholder="Paste an access code" aria-label="Access code" style="flex:1;min-width:0"><button class="btn sm" id="acc-add">Add</button></div></div>
   <div class="card" id="data-card"><h3>Your data</h3>
-    <p class="hint">Your search profile, letters, evidence bank and practice history are stored only on this device, not on our servers. Studio and Workshop text, and a few still frames from any recording, are sent to our AI provider to generate feedback and aren't kept by Meraki. The recording itself stays on your device. Payments are handled by Stripe, which keeps your receipt and email.</p>
+    <p class="hint">Your search profile, letters, evidence bank and practice history are stored only on this device, not on our servers. Studio and Workshop text, and a few still frames from any recording, are sent to our AI provider to generate feedback and aren't kept by Meraki. To prevent misuse, we keep an anonymous usage count per network (a scrambled code, never your IP address), deleted automatically within 30 days. The recording itself stays on your device. Payments are handled by Stripe, which keeps your receipt and email.</p>
     <div class="row" style="flex-wrap:wrap"><button class="btn ghost sm" id="data-del">Delete my data</button><label class="hint" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="data-keep" checked style="accent-color:var(--pink-ink)"> Keep my access codes</label></div></div>
   <p class="note" id="checkout-note">Free includes Compass, typed mock panels and 10 AI uses. Passes, credits and sessions are single payments through Stripe. Access ends when the pass ends; buy another any time. Prices in pounds sterling; Stripe can show your local currency at checkout.</p>
 </section>
@@ -771,7 +771,7 @@ const AI={
     let r;try{r=await fetch("/api/ai",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({prompt,images,tier:opts.modelTier==="complex"?"advanced":"standard",tokens:tokens(),trialAdvUsed:trialAdvUsed()})})}
     catch(e){throw {code:"network",message:"You seem to be offline."}}
     const d=await r.json().catch(()=>({}));
-    if(!r.ok){if(d.code==="no_credits"){go("plans");toast(d.error)}throw {code:d.code||"error",message:d.error||"Something went wrong."}}
+    if(!r.ok){if(d.code==="no_credits"||d.code==="free_limit"){go("plans");toast(d.error)}else if(d.code==="fair_use")toast(d.error);throw {code:d.code||"error",message:d.error||"Something went wrong."}}
     return d.json}};
 function sampler(){return Promise.resolve(AI)}
 

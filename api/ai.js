@@ -1,4 +1,5 @@
 import { entitlements, spendAdvanced, TRIAL_ADVANCED } from "./_access.js";
+import { netId, standardBucket, takeStandard, takeTrialAdvanced } from "./_limits.js";
 
 const MODELS = {
   standard: process.env.MODEL_STANDARD || "claude-sonnet-5-5",
@@ -15,11 +16,20 @@ export default async function handler(req, res) {
     return res.status(400).json({ code: "bad_request", error: "Nothing to read." });
 
   const adv = tier === "advanced";
+  const net = netId(req);
+  const ent = await entitlements(tokens).catch(() => null);
   if (adv) {
-    const ent = await entitlements(tokens).catch(() => null);
-    const trialOk = ent && ent.advanced < 1 && ent.trial && (Number(trialAdvUsed) || 0) < TRIAL_ADVANCED;
-    if (!ent || (ent.advanced < 1 && !trialOk)) return res.status(402).json({ code: "no_credits", error: "You're out of Advanced credits. Top up on the Plans page." });
+    let trialOk = ent && ent.advanced < 1 && ent.trial && (Number(trialAdvUsed) || 0) < TRIAL_ADVANCED;
+    if (trialOk) trialOk = (await takeTrialAdvanced(tokens, net)).ok;
+    if (!ent || (ent.advanced < 1 && !trialOk)) return res.status(402).json({ code: "no_credits", error: ent?.trial ? "You've used the trial's Advanced uses. Buy a pass or credits on the Plans page." : "You're out of Advanced credits. Top up on the Plans page." });
     if (!trialOk) await spendAdvanced(ent);
+  } else {
+    const b = standardBucket(ent, tokens, net);
+    const t = await takeStandard(b);
+    if (!t.ok) {
+      if (b.kind === "free") return res.status(402).json({ code: "free_limit", error: "Free AI uses from this network are used up for now. A Search Pass gives you unlimited everyday use." });
+      return res.status(429).json({ code: "fair_use", error: `You've reached today's fair-use limit of ${b.limit} AI reads. It resets at midnight UTC.` });
+    }
   }
 
   const content = [];
