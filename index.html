@@ -1103,7 +1103,7 @@ $("#acc-add").onclick=()=>{const v=$("#acc-code").value.trim().split(/\s+/).filt
   else refreshAccess()})();
 
 /* ---------- photos: slot -> url, filled once photos are supplied ---------- */
-const PHOTOS={"hero": "/img/hero.jpg", "compass": "/img/compass.jpg", "studio": "/img/studio.jpg?v=2", "workshop": "/img/workshop.jpg?v=2", "live": "/img/live.jpg"};
+const PHOTOS={"hero": "/img/hero.jpg", "compass": "/img/compass.jpg", "studio": "/img/studio.jpg?v=2", "workshop": "/img/workshop.jpg?v=2", "live": "/img/live.jpg?v=2"};
 $$("[data-slot]").forEach(f=>{const u=PHOTOS[f.dataset.slot];if(!u)return;const i=new Image();i.alt=f.querySelector("figcaption").textContent.replace("Photo · ","");i.src=u;f.prepend(i);f.classList.add("has")});
 
 const h=(location.hash||"").slice(1);go(views.includes(h)?h:"home");
