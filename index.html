@@ -312,6 +312,17 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
 .cam video{width:100%;height:100%;object-fit:cover;display:block}
 .cam .ovl{position:absolute;inset:auto 0 0 0;display:flex;justify-content:space-between;align-items:center;padding:12px;background:linear-gradient(transparent,rgba(0,0,0,.65));color:#fff;font-family:var(--mono);font-size:12px}
 .cam{cursor:pointer}
+.cam.locked{cursor:not-allowed;filter:grayscale(1);opacity:.45}
+.qcard.veiled .qtext{filter:blur(9px);user-select:none;opacity:.6}
+.vbrief{background:var(--sunk);border-radius:var(--r-sm);padding:16px;display:grid;gap:10px}
+.vbrief ol{margin:0;padding-left:20px;display:grid;gap:6px;font-size:15.5px}
+.thinkbar{background:var(--navy);color:#fff;border-radius:var(--r-sm);padding:14px 16px;display:grid;gap:10px}
+.thinkbar .tb-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-weight:600}
+.thinkbar .tb-row b{font-family:var(--mono);font-size:30px;font-variant-numeric:tabular-nums}
+.thinkbar .tb-track{height:8px;border-radius:99px;background:rgba(255,255,255,.18);overflow:hidden}
+.thinkbar .tb-track i{display:block;height:100%;width:100%;background:var(--pink);border-radius:99px;transition:width .25s linear}
+.thinkbar .tb-skip{color:#F3D0E2;justify-self:start;font-size:14px}
+.thinkbar.go{background:var(--pink);color:#232A44}.thinkbar.go .tb-track{display:none}
 .cam.wide{aspect-ratio:16/9;max-height:70vh}
 .cam .ovl .btn{background:#fff;color:#232A44}
 .cam .ovl .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#888;margin-right:8px;vertical-align:middle}
@@ -343,6 +354,7 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
 .sumgrid div{background:var(--sunk);border-radius:var(--r-sm);padding:10px;display:grid;gap:2px}
 .sumgrid b{font-size:24px;font-variant-numeric:tabular-nums}
 .sumgrid small{font-size:11px;color:var(--muted);font-weight:600}
+.setup-col{display:grid;gap:12px}
 .in-session .setup-only{display:none}
 
 /* plans */
@@ -547,7 +559,7 @@ ol.fixes{margin:0;padding-left:22px;display:grid;gap:8px;font-family:var(--body)
   <div class="vh"><div><span class="eyebrow">Workshop</span><h1 class="page-h">Rehearse the real panel.</h1></div><button class="btn sm ghost mob-end" id="w-end" hidden>End</button></div>
   <p class="lede setup-only">Questions modelled on real international school panels, tailored to you and the role. Answer in writing or on camera.</p>
   <div class="wgrid">
-    <div class="setup-col setup-only" style="display:grid;gap:12px">
+    <div class="setup-col setup-only">
       <div class="card">
         <div class="field"><span class="lab">Choose your panel</span><div class="panelpick" id="w-panels"></div></div>
         <div class="field"><span class="lab">Format</span><div class="seg" role="group" aria-label="Format"><button type="button" id="w-typed" aria-pressed="true">Typed</button><button type="button" id="w-video" aria-pressed="false">One-way video</button></div></div>
@@ -997,9 +1009,12 @@ $("#w-end").onclick=endSession;
 let clockT=null,t0=0,rec=null,chunks=[],frames=[],recSecs=0,frameT=null;
 function stopClock(){clearInterval(clockT);clockT=null}
 function fmtT(s){s=Math.max(0,Math.round(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function thinkDone(){const tb=$("#v-think");if(tb){tb.classList.add("go");$("#v-think-lab").textContent="Time's up. Record your answer now";$("#v-think-t").textContent="";const sk=$("#v-think-skip");if(sk)sk.hidden=true;const f=$("#v-think-fill");if(f)f.style.width="0%"}
+  const cam=$("#cam");if(cam)cam.classList.remove("locked");const n=$("#v-note");if(n&&!rec)n.innerHTML=canLive()?`Click to record. <label for="v-file" class="linkbtn">Or upload a video</label>`:"Tap to record.";}
 function runClock(mode,limit){stopClock();t0=Date.now();
   clockT=setInterval(()=>{const el=$("#clock");const s=(Date.now()-t0)/1000;if(!el)return;
-    if(mode==="think"){el.textContent="Think "+fmtT(limit-s);if(s>=limit){stopClock();el.textContent="Record now";el.classList.add("over")}}
+    if(mode==="think"){const tt=$("#v-think-t"),fill=$("#v-think-fill");if(tt)tt.textContent=fmtT(limit-s);if(fill)fill.style.width=Math.max(0,100-100*s/limit)+"%";
+      if(s>=limit){stopClock();thinkDone()}}
     else{el.textContent=fmtT(s);el.classList.toggle("over",s>(limit||150));if(mode==="rec"){recSecs=s;const r=$("#v-time");if(r)r.textContent=fmtT(s)+" / 2:00";if(s>=120)stopRec()}}},250)}
 function qcard(q,s,compact){const real=s.qs.filter(x=>!x.probe).length,pos=s.qs.slice(0,s.i+1).filter(x=>!x.probe).length;
   return `<div class="qcard"><div class="qmeta"><span class="eyebrow">${q.probe?"Follow-up":`Question ${pos} of ${real}`} · ${esc(q.t)}</span>${compact?"":`<span class="clock" id="clock">0:00</span>`}</div>
@@ -1009,26 +1024,36 @@ const wc=t=>(t.trim().match(/\S+/g)||[]).length;
 function ask(){const s=W.sess,q=s.qs[s.i];frames=[];recSecs=0;if(typeof killStream==="function")killStream();const typed=s.fmt==="typed";
   $("#ws-stage").innerHTML=qcard(q,s)+`<div class="card">
    ${typed?`<div class="field"><label for="w-ans">Your answer</label>
-   <textarea id="w-ans" rows="8" placeholder="Answer as you would speak it. Aim for 150 to 300 words."></textarea></div>`:`<label class="cam" id="cam" for="v-file"><div class="ph" id="cam-ph"><span class="recbig" aria-hidden="true"></span><b style="display:block;font-family:var(--display);font-size:21px;color:#fff;margin:12px 0 4px">Tap to record</b>Opens your front camera. One take, up to two minutes.</div></label>
+   <textarea id="w-ans" rows="8" placeholder="Answer as you would speak it. Aim for 150 to 300 words."></textarea></div>`:`<div class="vbrief" id="v-brief"><b>How this works</b>
+     <ol><li><b>Click Start.</b> The question appears and 30 seconds of thinking time counts down.</li>
+     <li><b>When the time is up, click Record</b> and answer to camera, up to two minutes.</li>
+     <li><b>You only get one take</b>, just like the real thing.</li></ol>
+     <button class="btn teal block" id="v-go" type="button">Start: show the question</button></div>
+   <div class="thinkbar" id="v-think" hidden><div class="tb-row"><span id="v-think-lab">Thinking time</span><b id="v-think-t">0:30</b></div><div class="tb-track"><i id="v-think-fill"></i></div>
+     <button type="button" class="linkbtn tb-skip" id="v-think-skip">I'm ready, record now</button></div>
+   <div id="v-stage" hidden><label class="cam locked" id="cam" for="v-file"><div class="ph" id="cam-ph"><span class="recbig" aria-hidden="true"></span><b style="display:block;font-family:var(--display);font-size:21px;color:#fff;margin:12px 0 4px">Tap to record</b>Opens your front camera. One take, up to two minutes.</div></label>
    <input type="file" id="v-file" accept="video/*" capture="user" hidden>
-   <span class="hint" id="v-note">Use the thinking time, then tap to record.</span>
+   <span class="hint" id="v-note">Record unlocks when the thinking time ends.</span></div>
    <details class="more" id="v-more"><summary>Add what you said for sharper feedback (optional)</summary>
    <div class="field" style="margin-top:10px"><textarea id="w-ans" rows="4" aria-label="What you said" placeholder="Tap the microphone on your keyboard and say your main points again."></textarea></div></details>`}
    <div class="row"><button class="btn" id="w-fb" style="flex:1">Get feedback</button><button class="btn ghost" id="w-skip">Skip</button></div>
    <div class="row" style="justify-content:space-between"><span class="status" id="w-status" aria-live="polite"></span><span class="hint" id="w-wc">0 words</span></div></div>`;
   $("#w-ans").addEventListener("input",()=>{$("#w-wc").textContent=wc($("#w-ans").value)+" words"});
   $("#w-fb").onclick=feedback;$("#w-skip").onclick=next;
-  if(typed)runClock("up",150);else{setupCam();runClock("think",30)}
+  if(typed)runClock("up",150);else{setupCam();$("#clock").hidden=true;$(".qcard").classList.add("veiled");
+    $("#v-go").onclick=()=>{$("#v-brief").hidden=true;$(".qcard").classList.remove("veiled");$("#v-think").hidden=false;$("#v-stage").hidden=false;runClock("think",30)};
+    $("#v-think-skip").onclick=()=>{stopClock();thinkDone()}}
   window.scrollTo({top:0,behavior:"smooth"})}
 const canLive=()=>!mobile&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.MediaRecorder);
 function killStream(){if(W.stream){W.stream.getTracks().forEach(t=>t.stop());W.stream=null}}
 function setupCam(){
   $("#v-file").onchange=e=>{const f=e.target.files&&e.target.files[0];if(f)useFile(f);e.target.value=""};
   $("#w-fb").disabled=true;$("#w-fb").textContent="Record first";
+  $("#cam").addEventListener("click",ev=>{if(ev.currentTarget.classList.contains("locked")){ev.preventDefault();ev.stopImmediatePropagation()}},true);
   if(canLive()){const cam=$("#cam");cam.classList.add("wide");
     cam.querySelector(".ph").lastChild.textContent="Turns on your webcam here. One take, up to two minutes.";cam.querySelector(".ph b").textContent="Click to record";
     cam.addEventListener("click",ev=>{ev.preventDefault();openCam()});
-    $("#v-note").innerHTML=`Use the thinking time, then click to record. <label for="v-file" class="linkbtn">Or upload a video</label>`}}
+  }}
 async function openCam(){const note=$("#v-note");note.textContent="Allow camera access in your browser…";
   let st=null;try{st=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:1280},height:{ideal:720}},audio:true})}
   catch(e){try{st=await navigator.mediaDevices.getUserMedia({video:true})}catch(e2){}}
@@ -1054,8 +1079,8 @@ function stopRec(){stopClock();clearInterval(frameT);if(rec&&rec.state!=="inacti
 function useFile(f,live){stopClock();if(!live){frames=[];recSecs=0}
   const v=document.createElement("video");v.controls=true;v.playsInline=true;v.muted=true;v.preload="auto";v.id="live";v.src=URL.createObjectURL(f);
   const cam=$("#cam"),box=document.createElement("div");box.className="cam"+(canLive()?" wide":"");box.id="cam";box.appendChild(v);cam.replaceWith(box);
-  const n=$("#v-note");n.innerHTML=`Recorded. <label for="v-file" id="v-again" class="linkbtn">Record again</label>`;
-  if(canLive())$("#v-again").addEventListener("click",ev=>{ev.preventDefault();openCam()});
+  const n=$("#v-note");n.innerHTML=`Recorded. That's your one take: get feedback, or move on to the next question.`;
+  const tb=$("#v-think");if(tb)tb.hidden=true;
   const fb=$("#w-fb");fb.disabled=false;fb.textContent="Get feedback";
   if(live){recSecs=live.secs;frames=live.frames;n.insertAdjacentHTML("afterbegin",`${fmtT(recSecs)} · `);v.muted=false;return}
   v.onloadedmetadata=async()=>{recSecs=isFinite(v.duration)?v.duration:0;
